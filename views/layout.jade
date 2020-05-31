@@ -13,12 +13,18 @@ html(lang="en")
           span.navbar-toggler-icon
         #navbarText.collapse.navbar-collapse
           ul.navbar-nav.mr-auto
-            if title == 'Home'
+            if title == 'Home | nbreKB'
               li.nav-item.active
                 a.nav-link(href='/') Home
             else
               li.nav-item
                 a.nav-link(href='/') Home
+            if title == 'Agents | nbreKB'
+              li.nav-item.active
+                a.nav-link(href='/agents') Agents
+            else
+              li.nav-item
+                a.nav-link(href='/agents') Agents
     .container
       block content
       script(src='https://code.jquery.com/jquery-3.5.1.slim.min.js', integrity='sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj', crossorigin='anonymous')

@@ -1,0 +1,21 @@
+extends layout
+
+block content
+	h2 Agent List
+	table.table.table-dark.table-hover.table-striped
+		thead
+			tr
+				th Agent Name
+				th Corporation
+				th Kills
+				th Losses
+		tbody
+			if agents.length
+				for agent in agents
+					tr
+						td 
+							a(href='/agents?id=#{agent.id}') #{agent.name}
+						td 
+							a(href='/corporations?id=#{agent.corporation.id}') #{agent.corporation.name}
+						td N/A
+						td N/A
