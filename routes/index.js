@@ -6,7 +6,7 @@ var router = express.Router();
 var mongoose = require('mongoose');
 var moment = require('moment');
 
-// Get our Kill model
+// Get our models
 var Kill = require('../models/kill');
 
 /* GET home page. */

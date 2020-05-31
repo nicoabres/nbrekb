@@ -228,7 +228,7 @@ function getAgents() {
   });
 };
 
-// Get all agents from OP API
+// Get all robots from OP API
 function getRobots() {
   // Just get the first page of data so we can find the last page
   var getKillboardRobotData = async () => {
@@ -296,7 +296,7 @@ function getRobots() {
   });
 };
 
-// Get all agents from OP API
+// Get all zones from OP API
 function getZones() {
   // Just get the first page of data so we can find the last page
   var getKillboardZoneData = async () => {
