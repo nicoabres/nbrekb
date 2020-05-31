@@ -19,7 +19,8 @@ block content
             td
               if kill.robot.name
                 img.rounded-sm(src='/images/icon_mech_#{kill.robot.name.toLowerCase()}_mini.png')
-            td #{kill.zone.name}
+            td 
+              a(href='/zones?id=#{kill.zone.id}') #{kill.zone.name}
             td 
               a(href='/agents?id=#{kill.agent.id}') #{kill.agent.name} (#{kill.robot.name})
               br
