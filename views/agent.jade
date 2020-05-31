@@ -1,0 +1,97 @@
+extends layout
+
+block content
+    .row
+        .col-md-6
+            table.table.table-dark
+                tbody
+                    tr
+                        th Character
+                        td #{agentInfo.name}
+                    tr
+                        th Corporation
+                        td #{agentInfo.corporation.name}
+        .col-md-6
+            table.table.table-dark
+                thead
+                    tr
+                        th Kills
+                        th Losses
+                        th Eff. %
+                tbody
+                    tr
+                        td #{agentKillingBlows.length}
+                        td #{agentLosses.length}
+                        td N/A
+    
+    h2 Recent Losses
+    table.table.table-dark.table-hover.table-striped
+        thead
+            tr
+                th Time
+                th Bot
+                th Zone
+                th Victim
+                th Final Blow
+        tbody
+            if agentLosses.length
+                for loss in agentLosses
+                    tr
+                        - var date = moment(loss.date).format('YYYY-MM-DD HH:mm:ss')
+                        td #{date}
+                        td
+                            if loss.robot.name
+                                img.rounded-sm(src='/images/icon_mech_#{loss.robot.name.toLowerCase()}_mini.png')
+                        td #{loss.zone.name}
+                        td 
+                            a(href='/agents?id=#{loss.agent.id}') #{loss.agent.name} (#{loss.robot.name})
+                            br
+                            a(href='/corporations?id=#{loss.corporation.id}') #{loss.corporation.name}
+                        td 
+                            - var i = 0
+                            each attacker in loss.attackers
+                                - i++
+                            for attacker in loss.attackers
+                                if attacker.hasKillingBlow
+                                    a(href='/agents?id=#{attacker._embedded.agent.id}') #{attacker._embedded.agent.name} (#{i})
+                                    br
+                                    a(href='/corporations?id=#{attacker._embedded.corporation.id}') #{attacker._embedded.corporation.name}
+            else
+                tr
+                    td(colspan='5') No losses!
+
+    h2 Recent Kills
+    table.table.table-dark.table-hover.table-striped
+        thead
+            tr
+                th Time
+                th Bot
+                th Zone
+                th Victim
+                th Final Blow
+        tbody
+            if agentKillingBlows.length
+                for kill in agentKillingBlows
+                    tr
+                        - var date = moment(kill.date).format('YYYY-MM-DD HH:mm:ss')
+                        td #{date}
+                        td 
+                            if kill.robot.name
+                                img.rounded-sm(src='/images/icon_mech_#{kill.robot.name.toLowerCase()}_mini.png')
+                        td #{kill.zone.name}
+                        td 
+                            a(href='/agents?id=#{kill.agent.id}') #{kill.agent.name} (#{kill.robot.name})
+                            br
+                            a(href='/corporations?id=#{kill.corporation.id}') #{kill.corporation.name}
+                        td 
+                            - var i = 0
+                            each attacker in kill.attackers
+                                - i++
+                            for attacker in kill.attackers
+                                if attacker.hasKillingBlow
+                                    a(href='/agents?id=#{attacker._embedded.agent.id}') #{attacker._embedded.agent.name} (#{i})
+                                    br
+                                    a(href='/corporations?id=#{attacker._embedded.corporation.id}') #{attacker._embedded.corporation.name}
+            else        
+                tr
+                    td(colspan='5') No kills!

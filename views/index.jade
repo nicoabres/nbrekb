@@ -1,0 +1,35 @@
+extends layout
+
+block content
+  h2 Most Recent Kills
+  table.table.table-dark.table-hover.table-striped
+    thead
+      tr
+        th Time
+        th Bot
+        th Zone
+        th Victim
+        th Final Blow
+    tbody
+      if kills.length
+        for kill in kills
+          tr
+            - var date = moment(kill.date).format('YYYY-MM-DD HH:mm:ss')
+            td #{date}
+            td
+              if kill.robot.name
+                img.rounded-sm(src='/images/icon_mech_#{kill.robot.name.toLowerCase()}_mini.png')
+            td #{kill.zone.name}
+            td 
+              a(href='/agents?id=#{kill.agent.id}') #{kill.agent.name} (#{kill.robot.name})
+              br
+              a(href='/corporations?id=#{kill.corporation.id}') #{kill.corporation.name}
+            td
+              - var i = 0
+              each attacker in kill.attackers
+                - i++
+              for attacker in kill.attackers
+                if attacker.hasKillingBlow
+                  a(href='/agents?id=#{attacker._embedded.agent.id}') #{attacker._embedded.agent.name} (#{i})
+                  br
+                  a(href='/corporations?id=#{attacker._embedded.corporation.id}') #{attacker._embedded.corporation.name}
