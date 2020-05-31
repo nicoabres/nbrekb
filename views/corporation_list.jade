@@ -9,10 +9,38 @@ block content
 				th Kills
 				th Losses
 		tbody
-			if corporations.length
-				for corporation in corporations
+			if corporations.docs.length
+				for corporation in corporations.docs
 					tr
 						td 
 							a(href='/corporations?id=#{corporation.id}') #{corporation.name}
 						td N/A
 						td N/A
+	nav.pull-right(aria-label='Page navigation example')
+			ul.pagination
+				if corporations.hasPrevPage
+					li.page-item
+						a.page-link(href='/corporations?page=#{corporations.page - 1}&limit=10') <<
+				if corporations.page >= 4
+					li.page-item
+						a.page-link(href='/corporations?page=#{corporations.page - 3}&limit=10') #{corporations.page - 3}
+				if corporations.page >= 3
+					li.page-item
+						a.page-link(href='/corporations?page=#{corporations.page - 2}&limit=10') #{corporations.page - 2}
+				if corporations.page >= 2
+					li.page-item
+						a.page-link(href='/corporations?page=#{corporations.page - 1}&limit=10') #{corporations.page - 1}
+				li.page-item.active
+					a.page-link(href='/corporations?page=#{corporations.page}&limit=10') #{corporations.page}
+				if corporations.page <= corporations.totalPages - 1
+					li.page-item
+						a.page-link(href='/corporations?page=#{corporations.page + 1}&limit=10') #{corporations.page + 1}
+				if corporations.page <= corporations.totalPages - 2
+					li.page-item
+						a.page-link(href='/corporations?page=#{corporations.page + 2}&limit=10') #{corporations.page + 2}
+				if corporations.page <= corporations.totalPages - 3
+					li.page-item
+						a.page-link(href='/corporations?page=#{corporations.page + 3}&limit=10') #{corporations.page + 3}
+				if corporations.hasNextPage
+					li.page-item
+						a.page-link(href='/corporations?page=#{corporations.page + 1}&limit=10') >>

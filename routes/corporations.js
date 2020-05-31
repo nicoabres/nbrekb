@@ -9,12 +9,32 @@ var moment = require('moment');
 var Corporation = require('../models/corporation');
 var Kill = require('../models/kill');
 
+var corporationListAggregate
+
 /* GET corporations listing. */
 router.get('/', function(req, res, next) {
   if (!req.query.id) {
-    Corporation.find({}, function (error, corporations) {
+    if (!req.query.page) {
+      var paginateOptions = {
+        page: 1,
+        limit: 10
+      }
+    } else {
+      var paginateOptions = {
+        page: req.query.page,
+        limit: req.query.limit
+      }
+    }
+
+    Corporation.aggregatePaginate({}, paginateOptions).then(function (corporations) {
+      console.log(corporations)
       res.render('corporation_list', {title: 'Corporations | nbreKB', corporations: corporations})
+    }).catch(function(error) {
+      console.error(error)
     })
+    // Corporation.find({}, function (error, corporations) {
+    //   res.render('corporation_list', {title: 'Corporations | nbreKB', corporations: corporations})
+    // })
   } else {
     Corporation.aggregate([
       {

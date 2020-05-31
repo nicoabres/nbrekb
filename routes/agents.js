@@ -10,10 +10,8 @@ var moment = require('moment');
 var Kill = require('../models/kill');
 var Agent = require('../models/agent');
 
-/* GET agents page. */
-router.get('/', function(req, res, next) {
-    if (!req.query.id) {
-      Agent.aggregate([
+// Set out aggregation query
+var agentListAggregate = Agent.aggregate([
         {
           '$lookup': {
               'from': 'corporations',
@@ -26,12 +24,27 @@ router.get('/', function(req, res, next) {
           '$unwind': '$corporation'
         }
       ])
-      .exec(function (error, agents) {
-        if (error) {
-          console.error(error)
-        } else {
-          res.render('agent_list', {title: 'Agents | nbreKB', agents: agents})
+
+/* GET agents page. */
+router.get('/', function(req, res, next) {
+    if (!req.query.id) {
+      if (!req.query.page) {
+        var paginateOptions = {
+          page: 1,
+          limit: 10
         }
+      } else {
+        var paginateOptions = {
+          page: req.query.page,
+          limit: req.query.limit
+        }
+      }
+
+      Agent.aggregatePaginate(agentListAggregate, paginateOptions).then(function (agents) {
+        console.log(agents)
+        res.render('agent_list', {title: 'Agents | nbreKB', agents: agents})
+      }).catch(function(error) {
+        console.error(error)
       })
     } else {
       Agent.aggregate([
