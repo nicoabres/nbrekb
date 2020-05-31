@@ -4,9 +4,10 @@ block content
 	h2 Corporation List
 	table.table.table-dark.table-hover.table-striped
 		thead
-			th Corporation Name
-			th Kills
-			th Losses
+			tr
+				th Corporation Name
+				th Kills
+				th Losses
 		tbody
 			if corporations.length
 				for corporation in corporations
