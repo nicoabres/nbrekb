@@ -79,7 +79,6 @@ router.get('/', function(req, res, next) {
 				if (error) {
 					console.error(error)
 				} else {
-          console.log(zoneInfo)
 					res.render('zone', { title: zoneInfo.name + ' | Zone | nbreKB', zoneKills: zoneKills, zoneInfo: zoneInfo, moment: moment });
 				}
 			})

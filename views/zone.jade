@@ -38,7 +38,8 @@ block content
                         td #{date}
                         td 
                             if kill.robot.name
-                                img.rounded-sm(src='/images/icon_mech_#{kill.robot.name.toLowerCase()}_mini.png')
+                                a(href='/robots?id=#{kill.robot.id}')
+                                    img.rounded-sm(src='/images/icon_mech_#{kill.robot.name.toLowerCase()}_mini.png')
                         td 
                             a(href='/zones?id=#{kill.zone.id}') #{kill.zone.name}
                         td 
