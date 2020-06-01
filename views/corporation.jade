@@ -21,11 +21,11 @@ block content
 						th Eff. %
 				tbody
 					tr
-						td #{corporationKills.length}
-						td #{corporationLosses.length}
+						td N/A
+						td N/A
 						td N/A
 
-	h2 Recent Kills
+	h2 Recent Activity
 	table.table.table-dark.table-hover.table-striped
 		thead
 			tr
@@ -35,115 +35,68 @@ block content
 				th Victim
 				th Final Blow
 		tbody
-			for kill in corporationKills
-				tr
-					- var date = moment(kill.date).format('YYYY-MM-DD HH:mm:ss')
-					td #{date}
-					td 
-						if kill.robot.name
-							a(href='/robots?id=#{kill.robot.id}')
-								img.rounded-sm(src='/images/icon_mech_#{kill.robot.name.toLowerCase()}_mini.png')
-					td 
-						a(href='/zones?id=#{kill.zone.id}') #{kill.zone.name}
-					td 
-						a(href='/agents?id=#{kill.agent.id}') #{kill.agent.name} (#{kill.robot.name})
-						br
-						a(href='/corporations?id=#{kill.corporation.id}') #{kill.corporation.name}
-					td 
-						- var i = 0
+			for kill in kills.docs
+				if kill.corporationID == corporationInfo.id
+					tr.bg-danger
+						td #{moment(kill.date).format('YYYY-MM-DD HH:mm:ss')}
+						td #{kill.robot.name}
+						td #{kill.zone.name}
+						td #{kill.agent.name}
+						-var i = 0
 						each attacker in kill.attackers
 							- i++
 						for attacker in kill.attackers
 							if attacker.hasKillingBlow
-								a(href='/agents?id=#{attacker._embedded.agent.id}') #{attacker._embedded.agent.name} (#{i})
-								br
-								a(href='/corporations?id=#{attacker._embedded.corporation.id}') #{attacker._embedded.corporation.name}
+								td #{attacker._embedded.agent.name} (#{i})
+									br
+									| #{attacker._embedded.corporation.name}
 
-	h2 Recent Losses
-	table.table.table-dark.table-hover.table-striped
-		thead
-			tr
-				th Time
-				th Bot
-				th Zone
-				th Victim
-				th Final Blow
-		tbody
-			for loss in corporationLosses
-				tr
-					- var date = moment(loss.date).format('YYYY-MM-DD HH:mm:ss')
-					td #{date}
-					td 
-						if loss.robot.name
-							a(href='/robots?id=#{loss.robot.id}')
-								img.rounded-sm(src='/images/icon_mech_#{loss.robot.name.toLowerCase()}_mini.png')
-					td 
-						a(href='/zones?id=#{loss.zone.id}') #{loss.zone.name}
-					td 
-						a(href='/agents?id=#{loss.agent.id}') #{loss.agent.name} (#{loss.robot.name})
-						br
-						a(href='/corporations?id=#{loss.corporation.id}') #{loss.corporation.name}
-					td 
-						- var i = 0
-						each attacker in loss.attackers
-							- i++
-						for attacker in loss.attackers
-							if attacker.hasKillingBlow
-								a(href='/agents?id=#{attacker._embedded.agent.id}') #{attacker._embedded.agent.name} (#{i})
-								br
-								a(href='/corporations?id=#{attacker._embedded.corporation.id}') #{attacker._embedded.corporation.name}
+				else
+					-var i = 0
+					each attacker in kill.attackers
+						- i++
+					for attacker in kill.attackers
+						if attacker.hasKillingBlow
+							if attacker._embedded.corporation.id == corporationInfo.id
+								tr.bg-success
+									td #{moment(kill.date).format('YYYY-MM-DD HH:mm:ss')}
+									td #{kill.robot.name}
+									td #{kill.zone.name}
+									td #{kill.agent.name}
+									td #{attacker._embedded.agent.name} (#{i})
+										br
+										| #{attacker._embedded.corporation.name}
 
-	script.
-		function fixRobotNames(robotName, robotDefinition) {
-			if (robotDefinition == 'def_ictus_mk2_bot') {
-				return 'Ictus MK2'
-			} else if (robotDefinition == 'def_seth_mk2_bot') {
-				return 'Seth MK2'
-			} else if (robotDefinition == 'def_termis_mk2_bot') {
-				return 'Termis MK2'
-			} else if (robotDefinition == 'def_zenith_mk2_bot') {
-				return 'Zenith MK2'
-			} else if (robotDefinition == 'def_artemis_mk2_bot') {
-				return 'Artemis MK2'
-			} else if (robotDefinition == 'def_kain_mk2_bot') {
-				return 'Kain MK2'
-			} else if (robotDefinition == 'def_tyrannos_mk2_bot') {
-				return 'Tyrannos MK2'
-			} else if (robotDefinition == 'def_cameleon_mk2_bot') {
-				return 'Cameleon MK2'
-			} else if (robotDefinition == 'def_baphomet_mk2_bot') {
-				return 'Baphomet MK2'
-			} else if (robotDefinition == 'def_castel_mk2_bot') {
-				return 'Castel MK2'
-			} else if (robotDefinition == 'def_symbiont_mk2_bot') {
-				return 'Symbiont MK2'
-			} else if (robotDefinition == 'def_vagabond_mk2_bot') {
-				return 'Vagabond MK2'
-			} else if (robotDefinition == 'def_arbalest_mk2_bot') {
-				return 'Arbalest MK2'
-			} else if (robotDefinition == 'def_troiar_mk2_bot') {
-				return 'Troiar MK2'
-			} else if (robotDefinition == 'def_prometheus_mk2_bot') {
-				return 'Prometheus MK2'
-			} else if (robotDefinition == 'def_waspish_mk2_bot') {
-				return 'Waspish MK2'
-			} else if (robotDefinition == 'def_yagel_mk2_bot') {
-				return 'Yagel MK2'
-			} else if (robotDefinition == 'def_mesmer_mk2_bot') {
-				return 'Mesmer MK2'
-			} else if (robotDefinition == 'def_riveler_mk2_bot') {
-				return 'Riveler MK2'
-			} else if (robotDefinition == 'def_gropho_mk2_bot') {
-				return 'Gropho MK2'
-			} else if (robotDefinition == 'def_sequer_mk2_bot') {
-				return 'Sequer MK2'
-			} else if (robotDefinition == 'def_argano_mk2_bot') {
-				return 'Argano MK2'
-			} else if (robotDefinition == 'def_lithus_mk2_bot') {
-				return 'Lithus MK2'
-			} else if (robotDefinition == 'def_intakt_mk2_bot') {
-				return 'Intakt MK2'
-			} else {
-				return robotName
-			}
-		}
+	nav.pull-right(aria-label='Page navigation example')
+			ul.pagination
+				if kills.hasPrevPage
+					li.page-item
+						a.page-link(href='/corporations?id=#{corporationInfo.id}&page=1&limit=10') First
+					li.page-item
+						a.page-link(href='/corporations?id=#{corporationInfo.id}&page=#{kills.page - 1}&limit=10') <<
+				if kills.page >= 4
+					li.page-item
+						a.page-link(href='/corporations?id=#{corporationInfo.id}&page=#{kills.page - 3}&limit=10') #{kills.page - 3}
+				if kills.page >= 3
+					li.page-item
+						a.page-link(href='/corporations?id=#{corporationInfo.id}&page=#{kills.page - 2}&limit=10') #{kills.page - 2}
+				if kills.page >= 2
+					li.page-item
+						a.page-link(href='/corporations?id=#{corporationInfo.id}&page=#{kills.page - 1}&limit=10') #{kills.page - 1}
+				li.page-item.active
+					a.page-link(href='/corporations?id=#{corporationInfo.id}&page=#{kills.page}&limit=10') #{kills.page}
+				if kills.page <= kills.totalPages - 1
+					li.page-item
+						a.page-link(href='/corporations?id=#{corporationInfo.id}&page=#{kills.page + 1}&limit=10') #{kills.page + 1}
+				if kills.page <= kills.totalPages - 2
+					li.page-item
+						a.page-link(href='/corporations?id=#{corporationInfo.id}&page=#{kills.page + 2}&limit=10') #{kills.page + 2}
+				if kills.page <= kills.totalPages - 3
+					li.page-item
+						a.page-link(href='/corporations?id=#{corporationInfo.id}&page=#{kills.page + 3}&limit=10') #{kills.page + 3}
+				if kills.hasNextPage
+					li.page-item
+						a.page-link(href='/corporations?id=#{corporationInfo.id}&page=#{kills.page + 1}&limit=10') >>
+					li.page-item
+						a.page-link(href='/corporations?id=#{corporationInfo.id}&page=#{kills.totalPages}&limit=10') Last
+	p Total Kills: #{kills.totalDocs}

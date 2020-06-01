@@ -11,147 +11,109 @@ var Kill = require('../models/kill');
 
 /* GET robot listing. */
 router.get('/', function(req, res, next) {
-	Robot.aggregate([
-		{
-			'$match': {
-				'id': parseInt(req.query.id)
-			}
-		}
-	])
-	.exec(function (error, robotInfo) {
-		if (error) {
-			console.log(error)
+	if (!req.query.id) {
+	  
+	  if (!req.query.page) {
+	    var paginateOptions = {
+	      page: 1,
+	      limit: 10
+	    }
+	  } else {
+	    var paginateOptions = {
+	      page: req.query.page,
+	      limit: req.query.limit
+	    }
+	  }
+
+	  Robot.aggregatePaginate({}, paginateOptions).then(function (robots) {
+	  	console.log(robots)
+	  	res.render('robot_list', { title: 'Robots | nbreKB', robots: robots})
+	  })
+	} else {
+		if (!req.query.page) {
+		  var paginateOptions = {
+		    page: 1,
+		    limit: 10
+		  }
 		} else {
-			var robotInfo = robotInfo[0]
-			Kill.aggregate([
-				{
-					'$match': {
-						'robotID': parseInt(req.query.id)
-					}
-				},
-				{
-					'$lookup': {
-						'from': 'agents',
-						'localField': 'agentID',
-						'foreignField': 'id',
-						'as': 'agent'
-					}
-				},
-				{
-					'$unwind': '$agent'
-				},
-				{
-					'$lookup': {
-						'from': 'corporations',
-						'localField': 'corporationID',
-						'foreignField': 'id',
-						'as': 'corporation'
-					}
-				},
-				{
-					'$unwind': '$corporation'
-				},
-				{
-					'$lookup': {
-						'from': 'robots',
-						'localField': 'robotID',
-						'foreignField': 'id',
-						'as': 'robot'
-					}
-				},
-				{
-					'$unwind': '$robot'
-				},
-				{
-					'$lookup': {
-						'from': 'zones',
-						'localField': 'zoneID',
-						'foreignField': 'id',
-						'as': 'zone'
-					}
-				},
-				{
-					'$unwind': '$zone'
-				}
-			])
-			.sort({date: 'desc'})
-			.exec(function (error, robotLosses) {
-				if (error) {
-					console.error(error)
-				} else {
-					Kill.aggregate([
-						{
-							'$match': {
-								'attackers._embedded.robot.id': parseInt(req.query.id)
-							}
-						},
-						{
-							'$lookup': {
-								'from': 'agents',
-								'localField': 'agentID',
-								'foreignField': 'id',
-								'as': 'agent'
-							}
-						},
-						{
-							'$unwind': '$agent'
-						},
-						{
-							'$lookup': {
-								'from': 'corporations',
-								'localField': 'corporationID',
-								'foreignField': 'id',
-								'as': 'corporation'
-							}
-						},
-						{
-							'$unwind': '$corporation'
-						},
-						{
-							'$lookup': {
-								'from': 'robots',
-								'localField': 'robotID',
-								'foreignField': 'id',
-								'as': 'robot'
-							}
-						},
-						{
-							'$unwind': '$robot'
-						},
-						{
-							'$lookup': {
-								'from': 'zones',
-								'localField': 'zoneID',
-								'foreignField': 'id',
-								'as': 'zone'
-							}
-						},
-						{
-							'$unwind': '$zone'
-						}
-					])
-					.sort({date: 'desc'})
-					.exec(function (error, robotKills) {
-						if (error) {
-							console.error(error)
-						} else {
-							var robotKillingBlows = []
-							robotKills.forEach(kill => {
-								kill.attackers.forEach(attacker => {
-									if (attacker.hasKillingBlow) {
-										if (attacker._embedded.robot.id == req.query.id) {
-											robotKillingBlows.push(kill)
-										}
-									}
-								})
-							})
-							res.render('robot', { title: robotInfo.name + ' | Robot | nbreKB', robotInfo: robotInfo, robotLosses: robotLosses, robotKills: robotKillingBlows, moment: moment });
-						}
-					})
-				}
-			})
+		  var paginateOptions = {
+		    page: req.query.page,
+		    limit: req.query.limit
+		  }
 		}
-	})
+
+		var killListAggregate = Kill.aggregate([
+			{
+				'$match': {
+					'$or': [
+						{
+							'robotID': parseInt(req.query.id)
+						},
+						{
+							'attackers._embedded.robot.id': parseInt(req.query.id)
+						}
+					]
+				}
+			},
+			{
+				'$lookup': {
+					'from': 'agents',
+					'localField': 'agentID',
+					'foreignField': 'id',
+					'as': 'agent'
+				}
+			},
+			{
+				'$lookup': {
+					'from': 'corporations',
+					'localField': 'corporationID',
+					'foreignField': 'id',
+					'as': 'corporation'
+				}
+			},
+			{
+				'$lookup': {
+					'from': 'robots',
+					'localField': 'robotID',
+					'foreignField': 'id',
+					'as': 'robot'
+				}
+			},
+			{
+				'$lookup': {
+					'from': 'zones',
+					'localField': 'zoneID',
+					'foreignField': 'id',
+					'as': 'zone'
+				}
+			},
+			{
+				'$unwind': '$agent'
+			},
+			{
+				'$unwind': '$corporation'
+			},
+			{
+				'$unwind': '$robot'
+			},
+			{
+				'$unwind': '$zone'
+			}
+		])
+
+		Robot.aggregate([
+			{
+				'$match': {
+					'id': parseInt(req.query.id)
+				}
+			}
+		]).exec(function (error, robotInfo) {
+			var robotInfo = robotInfo[0]
+			Kill.aggregatePaginate(killListAggregate, paginateOptions).then(function (kills) {
+				res.render('robot', {title: robotInfo.name + ' | Agent | nbreKB', kills: kills, robotInfo: robotInfo, moment: moment})
+			})
+		})
+	}
 })
 
 module.exports = router;

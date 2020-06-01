@@ -44,3 +44,4 @@ block content
 				if corporations.hasNextPage
 					li.page-item
 						a.page-link(href='/corporations?page=#{corporations.page + 1}&limit=10') >>
+	p Total Corporations: #{corporations.totalDocs}

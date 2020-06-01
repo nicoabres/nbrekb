@@ -23,6 +23,8 @@ block content
 			ul.pagination
 				if agents.hasPrevPage
 					li.page-item
+						a.page-link(href='/agents?page=1&limit=10') First
+					li.page-item
 						a.page-link(href='/agents?page=#{agents.page - 1}&limit=10') <<
 				if agents.page >= 4
 					li.page-item
@@ -47,4 +49,6 @@ block content
 				if agents.hasNextPage
 					li.page-item
 						a.page-link(href='/agents?page=#{agents.page + 1}&limit=10') >>
+					li.page-item
+						a.page-link(href='/agents?page=#{agents.totalPages}&limit=10') Last
 	p Total Agents: #{agents.totalDocs}

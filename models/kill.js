@@ -1,6 +1,8 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
+var aggregatePaginate = require('mongoose-aggregate-paginate-v2');
+
 // Create the kill schema
 var killSchema = new Schema({
     uid: String,
@@ -13,6 +15,8 @@ var killSchema = new Schema({
     zoneID: Number,
     attackers: Array
 })
+
+killSchema.plugin(aggregatePaginate);
 
 // Create our kill model
 var Kill = mongoose.model('Kill', killSchema);
