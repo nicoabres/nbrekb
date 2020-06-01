@@ -9,8 +9,6 @@ var moment = require('moment');
 var Corporation = require('../models/corporation');
 var Kill = require('../models/kill');
 
-var corporationListAggregate
-
 /* GET corporations listing. */
 router.get('/', function(req, res, next) {
   if (!req.query.id) {
@@ -26,7 +24,13 @@ router.get('/', function(req, res, next) {
       }
     }
 
-    Corporation.aggregatePaginate({}, paginateOptions).then(function (corporations) {
+    var corporationListAggregate = Corporation.aggregate([
+      {
+        '$sort': {'name': 1}
+      }
+    ])
+
+    Corporation.aggregatePaginate(corporationListAggregate, paginateOptions).then(function (corporations) {
       res.render('corporation_list', {title: 'Corporations | nbreKB', corporations: corporations})
     }).catch(function(error) {
       console.error(error)
@@ -74,20 +78,16 @@ router.get('/', function(req, res, next) {
         {
           '$match': {
             '$or': [
+              {'corporationID': parseInt(req.query.id)},
               {
-                'corporationID': parseInt(req.query.id)
-              },
-              {
-                'attackers._embedded.agent.id': {
-                  '$in': members
+                attackers: {
+                  $elemMatch: {
+                    'hasKillingBlow': true,
+                    '_embedded.agent.id': {'$in': members}
+                  }
                 }
               }
             ]
-          } 
-        },
-        {
-          '$sort': {
-            'date': -1
           }
         },
         {
@@ -133,6 +133,9 @@ router.get('/', function(req, res, next) {
         },
         {
           '$unwind': '$zone'
+        },
+        {
+          '$sort': {'date': -1}
         }
       ])
 

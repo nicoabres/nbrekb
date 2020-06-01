@@ -17,11 +17,11 @@ block content
                         th Eff. %
                 tbody
                     tr
-                        td #{zoneKills.length}
-                        td 0
+                        td N/A
+                        td N/A
                         td N/A
 
-    h2 Recent Kills
+    h2 Recent Activity
     table.table.table-dark.table-hover.table-striped
         thead
             tr
@@ -31,30 +31,17 @@ block content
                 th Victim
                 th Final Blow
         tbody
-            if zoneKills.length
-                for kill in zoneKills
-                    tr
-                        - var date = moment(kill.date).format('YYYY-MM-DD HH:mm:ss')
-                        td #{date}
-                        td 
-                            if kill.robot.name
-                                a(href='/robots?id=#{kill.robot.id}')
-                                    img.rounded-sm(src='/images/icon_mech_#{kill.robot.name.toLowerCase()}_mini.png')
-                        td 
-                            a(href='/zones?id=#{kill.zone.id}') #{kill.zone.name}
-                        td 
-                            a(href='/agents?id=#{kill.agent.id}') #{kill.agent.name} (#{kill.robot.name})
-                            br
-                            a(href='/corporations?id=#{kill.corporation.id}') #{kill.corporation.name}
-                        td 
-                            - var i = 0
-                            each attacker in kill.attackers
-                                - i++
-                            for attacker in kill.attackers
-                                if attacker.hasKillingBlow
-                                    a(href='/agents?id=#{attacker._embedded.agent.id}') #{attacker._embedded.agent.name} (#{i})
-                                    br
-                                    a(href='/corporations?id=#{attacker._embedded.corporation.id}') #{attacker._embedded.corporation.name}
-            else        
-                tr
-                    td(colspan='5') No kills!
+            for kill in kills.docs
+                tr.bg-success
+                    td #{moment(kill.date).format('YYYY-MM-DD HH:mm:ss')}
+                    td #{kill.robot.name}
+                    td #{kill.zone.name}
+                    td #{kill.agent.name}
+                    -var i = 0
+                    each attacker in kill.attackers
+                        - i++
+                    for attacker in kill.attackers
+                        if attacker.hasKillingBlow
+                            td #{attacker._embedded.agent.name} (#{i})
+                                br
+                                | #{attacker._embedded.corporation.name}

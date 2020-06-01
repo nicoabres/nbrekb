@@ -11,79 +11,121 @@ var Kill = require('../models/kill');
 
 /* GET corporations listing. */
 router.get('/', function(req, res, next) {
-	Zone.aggregate([
-		{
-			'$match': {
-				'id': parseInt(req.query.id)
-			}
-		}
-	])
-	.exec(function (error, zoneInfo) {
-		if (error) {
-			console.error(error)
-		} else {
+  if (!req.query.id) {
+    if (!req.query.page) {
+      var paginateOptions = {
+        page: 1,
+        limit: 10
+      }
+    } else {
+      var paginateOptions = {
+        page: req.query.page,
+        limit: req.query.limit
+      }
+    }
+
+    var zoneListAggregate = Zone.aggregate([
+      {
+        '$sort': {'name': 1}
+      }
+    ])
+
+    Zone.aggregatePaginate(zoneListAggregate, paginateOptions).then(function (zones) {
+      res.render('zone_list', { title: 'Zones | nbreKB', zones: zones})
+    })
+  } else {
+    if (!req.query.page) {
+      var paginateOptions = {
+        page: 1,
+        limit: 10
+      }
+    } else {
+      var paginateOptions = {
+        page: req.query.page,
+        limit: req.query.limit
+      }
+    }
+
+    var killListAggregate = Kill.aggregate([
+      {
+        '$match': {
+          '$or': [
+            {'zoneID': parseInt(req.query.id)},
+            {
+              attackers: {
+                $elemMatch: {
+                  'hasKillingBlow': true,
+                  '_embedded.zone.id': parseInt(req.query.id)
+                }
+              }
+            }
+          ]
+        }
+      },
+      {
+        '$sort': {
+          'date': -1
+        }
+      },
+      {
+        '$lookup': {
+          'from': 'agents',
+          'localField': 'agentID',
+          'foreignField': 'id',
+          'as': 'agent'
+        }
+      },
+      {
+        '$lookup': {
+          'from': 'corporations',
+          'localField': 'corporationID',
+          'foreignField': 'id',
+          'as': 'corporation'
+        }
+      },
+      {
+        '$lookup': {
+          'from': 'robots',
+          'localField': 'robotID',
+          'foreignField': 'id',
+          'as': 'robot'
+        }
+      },
+      {
+        '$lookup': {
+          'from': 'zones',
+          'localField': 'zoneID',
+          'foreignField': 'id',
+          'as': 'zone'
+        }
+      },
+      {
+        '$unwind': '$agent'
+      },
+      {
+        '$unwind': '$corporation'
+      },
+      {
+        '$unwind': '$robot'
+      },
+      {
+        '$unwind': '$zone'
+      }
+    ])
+
+    Zone.aggregate([
+      {
+        '$match': {
+          'id': parseInt(req.query.id)
+        }
+      }
+    ]).exec(function (error, zoneInfo) {
       var zoneInfo = zoneInfo[0]
-			Kill.aggregate([
-				{
-					'$match': {
-						'zoneID': parseInt(req.query.id)
-					}
-				},
-				{
-					'$lookup': {
-                      'from': 'agents',
-                      'localField': 'agentID',
-                      'foreignField': 'id',
-                      'as': 'agent'
-                    }
-				},
-				{
-                    '$unwind': '$agent'
-              	},
-              	{
-                    '$lookup': {
-                      'from': 'corporations',
-                      'localField': 'corporationID',
-                      'foreignField': 'id',
-                      'as': 'corporation'
-                    }
-              	},
-              	{
-                    '$unwind': '$corporation'
-              	},
-              	{
-                    '$lookup': {
-                      'from': 'robots',
-                      'localField': 'robotID',
-                      'foreignField': 'id',
-                      'as': 'robot'
-                    }
-              	},
-              	{
-                    '$unwind': "$robot"
-              	},
-              	{
-                    '$lookup': {
-                      'from': 'zones',
-                      'localField': 'zoneID',
-                      'foreignField': 'id',
-                      'as': 'zone'
-                    }
-              	},
-              	{
-                	'$unwind': "$zone"
-              	}
-			])
-			.sort({date: 'desc'})
-			.exec(function (error, zoneKills) {
-				if (error) {
-					console.error(error)
-				} else {
-					res.render('zone', { title: zoneInfo.name + ' | Zone | nbreKB', zoneKills: zoneKills, zoneInfo: zoneInfo, moment: moment });
-				}
-			})
-		}
-	})
+      Kill.aggregatePaginate(killListAggregate, paginateOptions).then(function (kills) {
+        res.render('zone', {title: zoneInfo.name + ' | Agent | nbreKB', kills: kills, zoneInfo: zoneInfo, moment: moment})
+      })
+    })
+  }
 })
 
 module.exports = router;

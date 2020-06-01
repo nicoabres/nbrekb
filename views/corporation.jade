@@ -42,6 +42,8 @@ block content
 						td #{kill.robot.name}
 						td #{kill.zone.name}
 						td #{kill.agent.name}
+							br
+							| #{kill.corporation.name}
 						-var i = 0
 						each attacker in kill.attackers
 							- i++
@@ -50,22 +52,23 @@ block content
 								td #{attacker._embedded.agent.name} (#{i})
 									br
 									| #{attacker._embedded.corporation.name}
-
 				else
 					-var i = 0
 					each attacker in kill.attackers
 						- i++
 					for attacker in kill.attackers
 						if attacker.hasKillingBlow
-							if attacker._embedded.corporation.id == corporationInfo.id
-								tr.bg-success
-									td #{moment(kill.date).format('YYYY-MM-DD HH:mm:ss')}
-									td #{kill.robot.name}
-									td #{kill.zone.name}
-									td #{kill.agent.name}
-									td #{attacker._embedded.agent.name} (#{i})
-										br
-										| #{attacker._embedded.corporation.name}
+							tr.bg-success
+								td #{moment(kill.date).format('YYYY-MM-DD HH:mm:ss')}
+								td #{kill.robot.name}
+								td #{kill.zone.name}
+								td #{kill.agent.name}
+									br
+									| #{kill.corporation.name}
+								td #{attacker._embedded.agent.name} (#{i})
+									br
+									| #{attacker._embedded.corporation.name}
+
 
 	nav.pull-right(aria-label='Page navigation example')
 			ul.pagination

@@ -47,6 +47,7 @@ block content
 								td #{attacker._embedded.agent.name} (#{i})
 									br
 									| #{attacker._embedded.corporation.name}
+
 				else
 					-var i = 0
 					each attacker in kill.attackers
@@ -62,6 +63,7 @@ block content
 									td #{attacker._embedded.agent.name} (#{i})
 										br
 										| #{attacker._embedded.corporation.name}
+
 	nav.pull-right(aria-label='Page navigation example')
 			ul.pagination
 				if kills.hasPrevPage

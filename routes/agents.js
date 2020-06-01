@@ -37,6 +37,9 @@ router.get('/', function(req, res, next) {
       },
       {
         '$unwind': '$corporation'
+      },
+      {
+        '$sort': {'name': 1}
       }
     ])
 
@@ -63,11 +66,14 @@ router.get('/', function(req, res, next) {
       {
         '$match': {
           '$or': [
+            {'agentID': parseInt(req.query.id)},
             {
-              'agentID': parseInt(req.query.id)
-            },
-            {
-              'attackers._embedded.agent.id': parseInt(req.query.id)
+              attackers: {
+                $elemMatch: {
+                  'hasKillingBlow': true,
+                  '_embedded.agent.id': parseInt(req.query.id)
+                }
+              }
             }
           ]
         }
