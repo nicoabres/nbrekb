@@ -43,7 +43,21 @@ block content
 						if kill.corporationID == corporationInfo.id
 							tr(style="background-color:#ff634785")
 								td #{moment(kill.date).format('YYYY-MM-DD HH:mm:ss')}
-								td #{kill.robot.name}
+								td
+									if kill.robot.name.includes('MK2')
+										- var robotName = kill.robot.name
+										- robotName = robotName.replace(' MK2', '')
+										- robotName = robotName.toLowerCase()
+										a(href='/robots?id=#{kill.robot.id}')
+											img.rounded-sm(src='/images/icon_mech_#{robotName}_mk2_mini.png', alt='#{kill.robot.name')
+									else if kill.robot.name.includes(' PR')
+										- var robotName = kill.robot.name
+										- robotName = robotName.replace(' PR', '')
+										- robotName = robotName.toLowerCase()
+										img.rounded-sm(src='/images/icon_mech_#{robotName}_pr_mini.png', alt='#{kill.robot.name}')
+									else
+										a(href='/robots?id=#{kill.robot.id}')
+											img.rounded-sm(src='/images/icon_mech_#{kill.robot.name}_mini.png', alt='#{kill.robot.name}')
 								td #{kill.zone.name}
 								td #{kill.agent.name} (#{kill.robot.name})
 									br
@@ -59,7 +73,16 @@ block content
 						else
 							tr(style="background-color:#77dd7782")
 								td #{moment(kill.date).format('YYYY-MM-DD HH:mm:ss')}
-								td #{kill.robot.name}
+								td
+									if kill.robot.name.includes('MK2')
+										- var robotName = kill.robot.name
+										- robotName = robotName.replace(' MK2', '')
+										- robotName = robotName.toLowerCase()
+										a(href='/robots?id=#{kill.robot.id}')
+											img.rounded-sm(src='/images/icon_mech_#{robotName}_mk2_mini.png', alt='#{kill.robot.name')
+									else
+										a(href='/robots?id=#{kill.robot.id}')
+											img.rounded-sm(src='/images/icon_mech_#{kill.robot.name}_mini.png', alt='#{kill.robot.name}')
 								td #{kill.zone.name}
 								td #{kill.agent.name}
 									br

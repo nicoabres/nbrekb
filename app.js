@@ -268,6 +268,61 @@ function getRobots() {
 
     robotPages.forEach(robotPage => {
       robotPage.forEach(robot => {
+        if (robot.id == 41) {
+          robot.name = 'Baphomet MK2'
+        } else if (robot.id == 61) {
+          robot.name = 'Lithus MK2'
+        } else if (robot.id == 56) {
+          robot.name = 'Vagabond MK2'
+        } else if (robot.id == 51) {
+          robot.name = 'Termis MK2'
+        } else if (robot.id == 40) {
+          robot.name = 'Artemis MK2'
+        } else if (robot.id == 60) {
+          robot.name = 'Prometheus MK2'
+        } else if (robot.id == 50) {
+          robot.name = 'Yagel MK2' 
+        } else if (robot.id == 55) {
+          robot.name = 'Mesmer MK2'
+        } else if (robot.id == 46) {
+          robot.name = 'Seth MK2'
+        } else if (robot.id == 45) {
+          robot.name = 'Kain MK2'
+        } else if (robot.id == 38) {
+          robot.name = 'Cameleon MK2'
+        } else if (robot.id == 43) {
+          robot.name = 'Arbalest MK2'
+        } else if (robot.id == 48) {
+          robot.name = 'Intakt MK2'
+        } else if (robot.id == 53) {
+          robot.name = 'Riveler MK2'
+        } else if (robot.id == 58) {
+          robot.name = 'Zenith MK2'
+        } else if (robot.id == 63) {
+          robot.name = 'Sequer MK2'
+        } else if (robot.id == 39) {
+          robot.name = 'Ictus MK2'
+        } else if (robot.id == 44) {
+          robot.name = 'Waspish MK2'
+        } else if (robot.id == 49) {
+          robot.name = 'Gropho MK2'
+        } else if (robot.id == 54) {
+          robot.name = 'Ictus MK2'
+        } else if (robot.id == 42) {
+          robot.name = 'Tyrannos MK2'
+        } else if (robot.id == 59) {
+          robot.name = 'Symbiont MK2'
+        } else if (robot.id == 47) {
+          robot.name = 'Cameleon MK2'
+        } else if (robot.id == 52) {
+          robot.name = 'Troiar MK2'
+        } else if (robot.id == 57) {
+          robot.name = 'Castel MK2'
+        } else if (robot.id == 62) {
+          robot.name = 'Argano MK2'
+        } else if (robot.id == 64) {
+          robot.name = 'Arbalest PR'
+        } 
         robots.push(robot);
       });
     });
@@ -368,8 +423,8 @@ setInterval(function() {
   getKills();
   getCorporations();
   getAgents();
-  getRobots();
   getZones();
+  getRobots();
 }, 600000);
 
 var indexRouter = require('./routes/index');

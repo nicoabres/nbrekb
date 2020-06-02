@@ -15,11 +15,21 @@ block content
           tr
             td #{moment(kill.date).format('YYYY-MM-DD HH:mm:ss')}
             td
-              a(href='/robots?id=#{kill.robot.id}') #{kill.robot.name}
+              if kill.robot.name.includes('MK2')
+                - var robotName = kill.robot.name
+                - robotName = robotName.replace(' MK2', '')
+                - robotName = robotName.toLowerCase()
+                a(href='/robots?id=#{kill.robot.id}')
+                  img.rounded-sm(src='/images/icon_mech_#{robotName}_mk2_mini.png', alt='#{kill.robot.name}')
+              else
+                a(href='/robots?id=#{kill.robot.id}')
+                  img.rounded-sm(src='/images/icon_mech_#{kill.robot.name.toLowerCase()}_mini.png', alt='#{kill.robot.name}')
             td 
               a(href='/zones?id=#{kill.zone.id}') #{kill.zone.name}
             td 
-              a(href='/agents?id=#{kill.agent.id}') #{kill.agent.name}
+              a(href='/agents?id=#{kill.agent.id}') #{kill.agent.name} (#{kill.robot.name})
+                br
+                a(href='/corporations?id=#{kill.corporation.id}') #{kill.corporation.name}
             -var i = 0
             each attacker in kill.attackers
               - i++

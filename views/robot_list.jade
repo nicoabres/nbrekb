@@ -5,17 +5,36 @@ block content
 	table.table.table-dark.table-hover.table-striped
 		thead
 			tr
+				th(style='width: 5%')
 				th Robot Name
 				th Kills
 				th Losses
 		tbody
 			if robots.docs.length
 				for robot in robots.docs
-					tr
-						td 
-							a(href='/robots?id=#{robot.id}') #{robot.name}
-						td N/A
-						td N/A
+					if !robot.name
+						tr
+							td
+								a(href='/robots?id=#{robot.id}') Missing name!
+					else
+						tr
+							td
+								if robot.name.includes(' MK2')
+									- var robotName = robot.name
+									- robotName = robotName.replace(' MK2', '')
+									- robotName = robotName.toLowerCase()
+									img.rounded-sm(src='/images/icon_mech_#{robotName}_mk2_mini.png', alt='#{robot.name}')
+								else if robot.name.includes(' PR')
+									- var robotName = robot.name
+									- robotName = robotName.replace(' PR', '')
+									- robotName = robotName.toLowerCase()
+									img.rounded-sm(src='/images/icon_mech_#{robotName}_pr_mini.png', alt='#{robot.name}')
+								else
+									img.rounded-sm(src='/images/icon_mech_#{robot.name}_mini.png', alt='#{robot.name}')
+							td 
+								a(href='/robots?id=#{robot.id}') #{robot.name}
+							td N/A
+							td N/A
 	nav.pull-right(aria-label='Page navigation example')
 			ul.pagination
 				if robots.hasPrevPage
