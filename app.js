@@ -433,7 +433,6 @@ var corporationsRouter = require('./routes/corporations');
 var agentsRouter = require('./routes/agents');
 var zonesRouter = require('./routes/zones');
 var robotsRouter = require('./routes/robots');
-var killsRouter = require('./routes/kills');
 
 var app = express();
 
@@ -453,7 +452,6 @@ app.use('/corporations', corporationsRouter);
 app.use('/agents', agentsRouter);
 app.use('/zones', zonesRouter);
 app.use('/robots', robotsRouter);
-app.use('/kills', killsRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
