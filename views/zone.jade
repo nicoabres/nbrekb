@@ -37,7 +37,7 @@ block content
                         th Final Blow
                 tbody
                     for kill in kills.docs
-                        tr(style="background-color:#77dd7782")
+                        tr(style="background-color:#77dd7782", onclick="show_hide_detail(#{kill.id})")
                             td #{moment(kill.date).format('YYYY-MM-DD HH:mm:ss')}
                             td
                                 if kill.robot.name.includes('MK2')
@@ -68,6 +68,77 @@ block content
                                     td No killing blow
                                         br
                                         | Probably an NPC kill
+                            tr(id='#{kill.id}', style='display:none;')
+                              td(colspan='5')
+                                .row
+                                  .col-md-6
+                                    .table-responsive
+                                      table.table.table-dark.table-striped.table-bordered.table-sm
+                                        tbody
+                                          tr
+                                            td
+                                              if kill.robot.name.includes('MK2')
+                                                - var robotName = kill.robot.name
+                                                - robotName = robotName.replace(' MK2', '')
+                                                - robotName = robotName.toLowerCase()
+                                                a(href='/robots?id=#{kill.robot.id}')
+                                                  img.rounded-sm(src='/images/icon_mech_#{robotName}_mk2.png', alt='#{kill.robot.name')
+                                              else if kill.robot.name.includes(' PR')
+                                                - var robotName = kill.robot.name
+                                                - robotName = robotName.replace(' PR', '')
+                                                - robotName = robotName.toLowerCase()
+                                                img.rounded-sm(src='/images/icon_mech_#{robotName}_pr.png', alt='#{kill.robot.name}')
+                                              else
+                                                a(href='/robots?id=#{kill.robot.id}')
+                                                  img.rounded-sm(src='/images/icon_mech_#{kill.robot.name}.png', alt='#{kill.robot.name}')
+                                            td
+                                              table.table-dark.table-striped.table-bordered
+                                                tbody
+                                                  tr
+                                                    th Agent:
+                                                    td #{kill.agent.name}
+                                                  tr
+                                                    th Corporation:
+                                                    td #{kill.corporation.name}
+                                                  tr
+                                                    th Robot:
+                                                    td #{kill.robot.name}
+                                                  tr
+                                                    th Zone:
+                                                    td #{kill.zone.name}
+                                                  tr
+                                                    th Time:
+                                                    td #{moment(kill.date).format('YYYY-MM-DD HH:mm:ss')}
+                                                  tr
+                                                    th Damage Received:
+                                                    td #{Math.round(kill.damageReceived)}
+                                  .col-md-6
+                                    .table-responsive
+                                      table.table.table-dark.table-striped.table-bordered.table-sm
+                                        thead
+                                          tr
+                                            th.th-inner.text-center Agent
+                                            th.th-inner.text-center Robot
+                                            th.th-inner.text-center Damage Dealt
+                                        tbody
+                                          for attacker in kill.attackers
+                                            tr
+                                              if attacker.hasKillingBlow
+                                                td #{attacker._embedded.agent.name}
+                                                  br
+                                                  | #{attacker._embedded.corporation.name}
+                                                td #{attacker._embedded.robot.name}
+                                                td.text-right #{Math.round(attacker.damageDealt)} (KILLING BLOW)
+                                                  br
+                                                  | #{(attacker.damageDealt / kill.damageReceived).toFixed(4) * 100}%
+                                              else
+                                                td #{attacker._embedded.agent.name}
+                                                  br
+                                                  | #{attacker._embedded.corporation.name}
+                                                td #{attacker._embedded.robot.name}
+                                                td.text-right #{Math.round(attacker.damageDealt)}
+                                                  br
+                                                  | #{(attacker.damageDealt / kill.damageReceived).toFixed(4) * 100}%
             .row.float-right
                 .col-md-12
                     nav.pull-right(aria-label='Page navigation example')
@@ -103,3 +174,7 @@ block content
                                     li.page-item
                                         a.page-link(href='/zones?id=#{zoneInfo.id}&page=#{kills.totalPages}&limit=10') Last
                     p Total Kills: #{kills.totalDocs}
+    script.
+      function show_hide_detail(killID) {
+        $('#' + killID).toggle();
+      }
