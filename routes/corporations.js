@@ -79,14 +79,7 @@ router.get('/', function(req, res, next) {
           '$match': {
             '$or': [
               {'corporationID': parseInt(req.query.id)},
-              {
-                attackers: {
-                  $elemMatch: {
-                    'hasKillingBlow': true,
-                    '_embedded.agent.id': {'$in': members}
-                  }
-                }
-              }
+              {'attackers._embedded.agent.id': {'$in': members}}
             ]
           }
         },
@@ -139,10 +132,13 @@ router.get('/', function(req, res, next) {
         }
       ])
 
-      Kill.aggregatePaginate(killListAggregate, paginateOptions).then(function (kills) {
-        res.render('corporation', { title: corporationInfo.name + ' | Corporation | nbreKB', corporationInfo: corporationInfo, kills: kills, moment: moment });
+      Kill.countDocuments({'corporationID': parseInt(req.query.id)}).then(function (totalLosses) {
+        Kill.countDocuments({'attackers._embedded.agent.id': {'$in': members}}).then(function(totalKills) {
+          Kill.aggregatePaginate(killListAggregate, paginateOptions).then(function (kills) {
+            res.render('corporation', { title: corporationInfo.name + ' | Corporation | nbreKB', corporationInfo: corporationInfo, kills: kills, moment: moment, totalLosses: totalLosses, totalKills: totalKills });
+          })
+        })
       })
-
     })
   }
 });

@@ -52,14 +52,7 @@ router.get('/', function(req, res, next) {
 			  '$match': {
 				'$or': [
 				  {'robotID': parseInt(req.query.id)},
-				  {
-					attackers: {
-					  $elemMatch: {
-						'hasKillingBlow': true,
-						'_embedded.robot.id': parseInt(req.query.id)
-					  }
-					}
-				  }
+				  {'attackers._embedded.robot.id': parseInt(req.query.id)}
 				]
 			  }
 			},
@@ -120,8 +113,13 @@ router.get('/', function(req, res, next) {
 			}
 		]).exec(function (error, robotInfo) {
 			var robotInfo = robotInfo[0]
-			Kill.aggregatePaginate(killListAggregate, paginateOptions).then(function (kills) {
-				res.render('robot', {title: robotInfo.name + ' | Agent | nbreKB', kills: kills, robotInfo: robotInfo, moment: moment})
+
+			Kill.countDocuments({'robotID': parseInt(req.query.id)}).then(function (totalLosses) {
+				Kill.countDocuments({'attackers._embedded.robot.id': parseInt(req.query.id)}).then(function (totalKills) {
+					Kill.aggregatePaginate(killListAggregate, paginateOptions).then(function (kills) {
+						res.render('robot', {title: robotInfo.name + ' | Agent | nbreKB', kills: kills, robotInfo: robotInfo, totalLosses: totalLosses, totalKills: totalKills, moment: moment})
+					})
+				})
 			})
 		})
 	}

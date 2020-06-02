@@ -67,14 +67,7 @@ router.get('/', function(req, res, next) {
         '$match': {
           '$or': [
             {'agentID': parseInt(req.query.id)},
-            {
-              attackers: {
-                $elemMatch: {
-                  'hasKillingBlow': true,
-                  '_embedded.agent.id': parseInt(req.query.id)
-                }
-              }
-            }
+            {'attackers._embedded.agent.id': parseInt(req.query.id)}
           ]
         }
       },
@@ -148,8 +141,13 @@ router.get('/', function(req, res, next) {
       }
     ]).exec(function (error, agentInfo) {
       var agentInfo = agentInfo[0]
-      Kill.aggregatePaginate(killListAggregate, paginateOptions).then(function (kills) {
-        res.render('agent', {title: agentInfo.name + ' | Agent | nbreKB', kills: kills, agentInfo: agentInfo, moment: moment})
+
+      Kill.countDocuments({'agentID': parseInt(req.query.id)}).then(function (totalLosses) {
+        Kill.countDocuments({'attackers._embedded.agent.id': parseInt(req.query.id)}).then(function (totalKills) {
+          Kill.aggregatePaginate(killListAggregate, paginateOptions).then(function (kills) {
+            res.render('agent', {title: agentInfo.name + ' | Agent | nbreKB', kills: kills, agentInfo: agentInfo, totalLosses: totalLosses, totalKills: totalKills, moment: moment})
+          })
+        })
       })
     })
   }

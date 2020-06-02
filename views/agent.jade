@@ -2,100 +2,116 @@ extends layout
 
 block content
 	.row
-		.col-md-6
-			table.table.table-dark
+		.col-md-4
+			table.table.table-dark.table-hover.table-striped
 				tbody
 					tr
-						th Character
+						th Agent Name
 						td #{agentInfo.name}
 					tr
 						th Corporation
 						td #{agentInfo.corporation.name}
-		.col-md-6
-			table.table.table-dark
+		.col-md-8
+			table.table.table-dark.table-hover.table-striped
 				thead
 					tr
-						th Kills
-						th Losses
-						th Eff. %
+						th
+						th Destroyed
+						th Lost
+						th Efficiency
 				tbody
 					tr
-						td N/A
-						td N/A
-						td N/A
-	
-	h2 Recent Activity
-	table.table.table-dark.table-hover.table-striped
-		thead
-			tr
-				th Time
-				th Bot
-				th Zone
-				th Victim
-				th Final Blow
-		tbody
-			for kill in kills.docs
-				if kill.agentID == agentInfo.id
-					tr.bg-danger
-						td #{moment(kill.date).format('YYYY-MM-DD HH:mm:ss')}
-						td #{kill.robot.name}
-						td #{kill.zone.name}
-						td #{kill.agent.name}
-						-var i = 0
-						each attacker in kill.attackers
-							- i++
-						for attacker in kill.attackers
-							if attacker.hasKillingBlow
-								td #{attacker._embedded.agent.name} (#{i})
-									br
-									| #{attacker._embedded.corporation.name}
+						th Bots
+						td #{totalKills}
+						td #{totalLosses}
+						td #{totalKills / kills.docs.length}%
 
-				else
-					-var i = 0
-					each attacker in kill.attackers
-						- i++
-					for attacker in kill.attackers
-						if attacker.hasKillingBlow
-							if attacker._embedded.agent.id == agentInfo.id
-								tr.bg-success
-									td #{moment(kill.date).format('YYYY-MM-DD HH:mm:ss')}
-									td #{kill.robot.name}
-									td #{kill.zone.name}
-									td #{kill.agent.name}
-									td #{attacker._embedded.agent.name} (#{i})
-										br
-										| #{attacker._embedded.corporation.name}
-						
-	nav.pull-right(aria-label='Page navigation example')
-			ul.pagination
-				if kills.hasPrevPage
-					li.page-item
-						a.page-link(href='/agents?id=#{agentInfo.id}&page=1&limit=10') First
-					li.page-item
-						a.page-link(href='/agents?id=#{agentInfo.id}&page=#{kills.page - 1}&limit=10') <<
-				if kills.page >= 4
-					li.page-item
-						a.page-link(href='/agents?id=#{agentInfo.id}&page=#{kills.page - 3}&limit=10') #{kills.page - 3}
-				if kills.page >= 3
-					li.page-item
-						a.page-link(href='/agents?id=#{agentInfo.id}&page=#{kills.page - 2}&limit=10') #{kills.page - 2}
-				if kills.page >= 2
-					li.page-item
-						a.page-link(href='/agents?id=#{agentInfo.id}&page=#{kills.page - 1}&limit=10') #{kills.page - 1}
-				li.page-item.active
-					a.page-link(href='/agents?id=#{agentInfo.id}&page=#{kills.page}&limit=10') #{kills.page}
-				if kills.page <= kills.totalPages - 1
-					li.page-item
-						a.page-link(href='/agents?id=#{agentInfo.id}&page=#{kills.page + 1}&limit=10') #{kills.page + 1}
-				if kills.page <= kills.totalPages - 2
-					li.page-item
-						a.page-link(href='/agents?id=#{agentInfo.id}&page=#{kills.page + 2}&limit=10') #{kills.page + 2}
-				if kills.page <= kills.totalPages - 3
-					li.page-item
-						a.page-link(href='/agents?id=#{agentInfo.id}&page=#{kills.page + 3}&limit=10') #{kills.page + 3}
-				if kills.hasNextPage
-					li.page-item
-						a.page-link(href='/agents?id=#{agentInfo.id}&page=#{kills.page + 1}&limit=10') >>
-					li.page-item
-						a.page-link(href='/agents?id=#{agentInfo.id}&page=#{kills.totalPages}&limit=10') Last
-	p Total Kills: #{kills.totalDocs}
+	.row
+		.col-md-12
+			h2 Recent Activity
+			table.table.table-dark.table-hover.table-striped
+				thead
+					tr
+						th Time
+						th Bot
+						th Zone
+						th Victim
+						th Final Blow
+				tbody
+					for kill in kills.docs
+						if kill.agentID == agentInfo.id
+							tr(style="background-color:#ff634785")
+								td #{moment(kill.date).format('YYYY-MM-DD HH:mm:ss')}
+								td 
+									a(href='/robots?id=#{kill.robot.id}') #{kill.robot.name}
+								td
+									a(href='/zones?id=#{kill.zone.id}') #{kill.zone.name}
+								td
+									a(href='/agents?id=#{kill.agent.id}') #{kill.agent.name}
+									br
+									a(href='/corporations?id=#{kill.corporation.id}') #{kill.corporation.name}
+								-var i = 0
+								each attacker in kill.attackers
+									- i++
+								for attacker in kill.attackers
+									if attacker.hasKillingBlow
+										td 
+											a(href='/agents?id=#{attacker._embedded.agent.id}') #{attacker._embedded.agent.name} (#{i})
+											br
+											a(href='/corporations?id=#{attacker._embedded.corporation.id}') #{attacker._embedded.corporation.name}
+						else
+							tr(style="background-color:#77dd7782")
+								td #{moment(kill.date).format('YYYY-MM-DD HH:mm:ss')}
+								td 
+									a(href='/robots?id=#{kill.robot.id}')(style="a:#A7C8F2") #{kill.robot.name}
+								td
+									a(href='/zones?id=#{kill.zone.id}') #{kill.zone.name}
+								td
+									a(href='/agents?id=#{kill.agent.id}') #{kill.agent.name}
+									br
+									a(href='/corporations?id=#{kill.corporation.id}') #{kill.corporation.name}
+								-var i = 0
+								each attacker in kill.attackers
+									- i++
+								for attacker in kill.attackers
+									if attacker.hasKillingBlow
+										td
+											a(href='/agents?id=#{attacker._embedded.agent.id}') #{attacker._embedded.agent.name} (#{i})
+											br
+											a(href='/corporations?id=#{attacker._embedded.corporation.id}') #{attacker._embedded.corporation.name}
+
+			.row.float-right
+				.col-md-12				
+					nav.pull-right(aria-label='Page navigation example')
+							ul.pagination
+								if kills.hasPrevPage
+									li.page-item
+										a.page-link(href='/agents?id=#{agentInfo.id}&page=1&limit=10') First
+									li.page-item
+										a.page-link(href='/agents?id=#{agentInfo.id}&page=#{kills.page - 1}&limit=10') <<
+								if kills.page >= 4
+									li.page-item
+										a.page-link(href='/agents?id=#{agentInfo.id}&page=#{kills.page - 3}&limit=10') #{kills.page - 3}
+								if kills.page >= 3
+									li.page-item
+										a.page-link(href='/agents?id=#{agentInfo.id}&page=#{kills.page - 2}&limit=10') #{kills.page - 2}
+								if kills.page >= 2
+									li.page-item
+										a.page-link(href='/agents?id=#{agentInfo.id}&page=#{kills.page - 1}&limit=10') #{kills.page - 1}
+								li.page-item.active
+									a.page-link(href='/agents?id=#{agentInfo.id}&page=#{kills.page}&limit=10') #{kills.page}
+								if kills.page <= kills.totalPages - 1
+									li.page-item
+										a.page-link(href='/agents?id=#{agentInfo.id}&page=#{kills.page + 1}&limit=10') #{kills.page + 1}
+								if kills.page <= kills.totalPages - 2
+									li.page-item
+										a.page-link(href='/agents?id=#{agentInfo.id}&page=#{kills.page + 2}&limit=10') #{kills.page + 2}
+								if kills.page <= kills.totalPages - 3
+									li.page-item
+										a.page-link(href='/agents?id=#{agentInfo.id}&page=#{kills.page + 3}&limit=10') #{kills.page + 3}
+								if kills.hasNextPage
+									li.page-item
+										a.page-link(href='/agents?id=#{agentInfo.id}&page=#{kills.page + 1}&limit=10') >>
+									li.page-item
+										a.page-link(href='/agents?id=#{agentInfo.id}&page=#{kills.totalPages}&limit=10') Last
+					p Total Kills: #{kills.totalDocs}

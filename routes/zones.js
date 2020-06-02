@@ -51,14 +51,7 @@ router.get('/', function(req, res, next) {
         '$match': {
           '$or': [
             {'zoneID': parseInt(req.query.id)},
-            {
-              attackers: {
-                $elemMatch: {
-                  'hasKillingBlow': true,
-                  '_embedded.zone.id': parseInt(req.query.id)
-                }
-              }
-            }
+            {'attackers._embedded.zone.id': parseInt(req.query.id)}
           ]
         }
       },
@@ -121,8 +114,13 @@ router.get('/', function(req, res, next) {
       }
     ]).exec(function (error, zoneInfo) {
       var zoneInfo = zoneInfo[0]
-      Kill.aggregatePaginate(killListAggregate, paginateOptions).then(function (kills) {
-        res.render('zone', {title: zoneInfo.name + ' | Agent | nbreKB', kills: kills, zoneInfo: zoneInfo, moment: moment})
+
+      Kill.countDocuments({'zoneID': parseInt(req.query.id)}).then(function (totalLosses) {
+        Kill.countDocuments({'attackers._embedded.zone.id': parseInt(req.query.id)}).then(function (totalKills) {
+          Kill.aggregatePaginate(killListAggregate, paginateOptions).then(function (kills) {
+            res.render('zone', {title: zoneInfo.name + ' | Agent | nbreKB', kills: kills, zoneInfo: zoneInfo, totalLosses: totalLosses, totalKills: totalKills, moment: moment})
+          })
+        })
       })
     })
   }

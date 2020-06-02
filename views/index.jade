@@ -14,17 +14,21 @@ block content
       for kill in kills.docs
           tr
             td #{moment(kill.date).format('YYYY-MM-DD HH:mm:ss')}
-            td #{kill.robot.name}
-            td #{kill.zone.name}
-            td #{kill.agent.name}
+            td
+              a(href='/robots?id=#{kill.robot.id}') #{kill.robot.name}
+            td 
+              a(href='/zones?id=#{kill.zone.id}') #{kill.zone.name}
+            td 
+              a(href='/agents?id=#{kill.agent.id}') #{kill.agent.name}
             -var i = 0
             each attacker in kill.attackers
               - i++
             for attacker in kill.attackers
               if attacker.hasKillingBlow
-                td #{attacker._embedded.agent.name} (#{i})
+                td
+                  a(href='/agents?id=#{attacker._embedded.agent.id}') #{attacker._embedded.agent.name} (#{i})
                   br
-                  | #{attacker._embedded.corporation.name}
+                  a(href='/corporations?id=#{attacker._embedded.corporation.id}') #{attacker._embedded.corporation.name}
   nav.pull-right(aria-label='Page navigation example')
       ul.pagination
         if kills.hasPrevPage
