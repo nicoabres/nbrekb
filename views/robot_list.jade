@@ -38,7 +38,7 @@ block content
 									- robotName = robotName.toLowerCase()
 									img.rounded-sm(src='/images/icon_mech_#{robotName}_pr_mini.png', alt='#{robot.name}')
 								else
-									img.rounded-sm(src='/images/icon_mech_#{robot.name}_mini.png', alt='#{robot.name}')
+									img.rounded-sm(src='/images/icon_mech_#{robot.name.toLowerCase()}_mini.png', alt='#{robot.name}')
 							td 
 								a(href='/robots?id=#{robot.id}') #{robot.name}
 							td #{totalKills}
