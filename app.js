@@ -5,6 +5,12 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
+// Manually added modules
+var mongoose = require('mongoose');
+
+// Connect to our mongodb database using mongoose
+mongoose.connect('mongodb://localhost/local');
+
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var corporationsRouter = require('./routes/corporations');
