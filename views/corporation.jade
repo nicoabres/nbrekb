@@ -65,7 +65,7 @@ block content
 									img.rounded-sm(src='/images/icon_mech_#{robotName}_pr_mini.png', alt='#{kill.robot.name}')
 								else
 									a(href='/robots?id=#{kill.robot.id}')
-										img.rounded-sm(src='/images/icon_mech_#{kill.robot.name}_mini.png', alt='#{kill.robot.name}')
+										img.rounded-sm(src='/images/icon_mech_#{kill.robot.name.toLowerCase()}_mini.png', alt='#{kill.robot.name}')
 							td
 								a(href='/zones?id=#{kill.zone.id}') #{kill.zone.name}
 							td
@@ -112,7 +112,7 @@ block content
 																img.rounded-sm(src='/images/icon_mech_#{robotName}_pr.png', alt='#{kill.robot.name}')
 															else
 																a(href='/robots?id=#{kill.robot.id}')
-																	img.rounded-sm(src='/images/icon_mech_#{kill.robot.name}.png', alt='#{kill.robot.name}')
+																	img.rounded-sm(src='/images/icon_mech_#{kill.robot.name.toLowerCase()}.png', alt='#{kill.robot.name}')
 														td
 															//- Start victim detail table
 															table.table-dark.table-striped.table-bordered
