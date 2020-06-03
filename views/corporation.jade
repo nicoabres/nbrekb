@@ -1,207 +1,214 @@
 extends layout
 
 block content
-    .row
-        .col-md-4
-            table.table.table-dark.table-striped
-                tbody
-                    tr
-                        th Corporation Name
-                        td #{corporationInfo.name}
-                    tr
-                        th Members
-                        td #{corporationInfo.members.length}
-        
-        .col-md-8
-            table.table.table-dark.table-hover.table-striped
-                thead
-                    tr
-                        th
-                        th Destroyed
-                        th Lost
-                        th Efficiency
-                tbody
-                    tr
-                        th Bots
-                        td #{totalKills}
-                        td #{totalLosses}
-                        td #{totalKills / kills.docs.length}%
+	//- Start information and efficiency block
+	.row
+		.col-md-4
+			table.table.table-dark.table-hover.table-striped
+				tbody
+					tr
+						th Agent Name
+						td #{corporationInfo.name}
+					tr
+						th Corporation
+						td #{corporationInfo.members.length}
+		.col-md-8
+			table.table.table-dark.table-hover.table-striped
+				thead
+					tr
+						th
+						th Destroyed
+						th Lost
+						th Efficiency
+				tbody
+					tr
+						th Bots
+						td #{totalKills}
+						td #{totalLosses}
+						td #{totalKills / kills.docs.length}%
+	//- End information and efficiency block
 
-    .row
-        .col-md-12
-            h2 Recent Activity
-            table.table.table-dark.table-hover.table-striped
-                thead
-                    tr
-                        th Time
-                        th Bot
-                        th Zone
-                        th Victim
-                        th Final Blow
-                tbody
-                    for kill in kills.docs
-                        if kill.corporationID == corporationInfo.id
-                            tr(style="background-color:#ff634785", onclick="show_hide_detail(#{kill.id})")
-                                td #{moment(kill.date).format('YYYY-MM-DD HH:mm:ss')}
-                                td
-                                    if kill.robot.name.includes('MK2')
-                                        - var robotName = kill.robot.name
-                                        - robotName = robotName.replace(' MK2', '')
-                                        - robotName = robotName.toLowerCase()
-                                        a(href='/robots?id=#{kill.robot.id}')
-                                            img.rounded-sm(src='/images/icon_mech_#{robotName}_mk2_mini.png', alt='#{kill.robot.name')
-                                    else if kill.robot.name.includes(' PR')
-                                        - var robotName = kill.robot.name
-                                        - robotName = robotName.replace(' PR', '')
-                                        - robotName = robotName.toLowerCase()
-                                        img.rounded-sm(src='/images/icon_mech_#{robotName}_pr_mini.png', alt='#{kill.robot.name}')
-                                    else
-                                        a(href='/robots?id=#{kill.robot.id}')
-                                            img.rounded-sm(src='/images/icon_mech_#{kill.robot.name}_mini.png', alt='#{kill.robot.name}')
-                                td #{kill.zone.name}
-                                td #{kill.agent.name} (#{kill.robot.name})
-                                    br
-                                    | #{kill.corporation.name}
-                                -var i = 0
-                                each attacker in kill.attackers
-                                    - i++
-                                for attacker in kill.attackers
-                                    if attacker.hasKillingBlow
-                                        td #{attacker._embedded.agent.name} (#{i})
-                                            br
-                                            | #{attacker._embedded.corporation.name}
-                        else
-                            tr(style="background-color:#77dd7782", onclick="show_hide_detail(#{kill.id})")
-                                td #{moment(kill.date).format('YYYY-MM-DD HH:mm:ss')}
-                                td
-                                    if kill.robot.name.includes('MK2')
-                                        - var robotName = kill.robot.name
-                                        - robotName = robotName.replace(' MK2', '')
-                                        - robotName = robotName.toLowerCase()
-                                        a(href='/robots?id=#{kill.robot.id}')
-                                            img.rounded-sm(src='/images/icon_mech_#{robotName}_mk2_mini.png', alt='#{kill.robot.name')
-                                    else
-                                        a(href='/robots?id=#{kill.robot.id}')
-                                            img.rounded-sm(src='/images/icon_mech_#{kill.robot.name}_mini.png', alt='#{kill.robot.name}')
-                                td #{kill.zone.name}
-                                td #{kill.agent.name}
-                                    br
-                                    | #{kill.corporation.name}
-                                -var i = 0
-                                each attacker in kill.attackers
-                                    - i++
-                                for attacker in kill.attackers
-                                    if attacker.hasKillingBlow
-                                        td #{attacker._embedded.agent.name} (#{i})
-                                            br
-                                            | #{attacker._embedded.corporation.name}
-                        tr(id='#{kill.id}', style='display:none;')
-                          td(colspan='5')
-                            .row
-                              .col-md-6
-                                .table-responsive
-                                  table.table.table-dark.table-striped.table-bordered.table-sm
-                                    tbody
-                                      tr
-                                        td
-                                          if kill.robot.name.includes('MK2')
-                                            - var robotName = kill.robot.name
-                                            - robotName = robotName.replace(' MK2', '')
-                                            - robotName = robotName.toLowerCase()
-                                            a(href='/robots?id=#{kill.robot.id}')
-                                              img.rounded-sm(src='/images/icon_mech_#{robotName}_mk2.png', alt='#{kill.robot.name')
-                                          else if kill.robot.name.includes(' PR')
-                                            - var robotName = kill.robot.name
-                                            - robotName = robotName.replace(' PR', '')
-                                            - robotName = robotName.toLowerCase()
-                                            img.rounded-sm(src='/images/icon_mech_#{robotName}_pr.png', alt='#{kill.robot.name}')
-                                          else
-                                            a(href='/robots?id=#{kill.robot.id}')
-                                              img.rounded-sm(src='/images/icon_mech_#{kill.robot.name}.png', alt='#{kill.robot.name}')
-                                        td
-                                          table.table-dark.table-striped.table-bordered
-                                            tbody
-                                              tr
-                                                th Agent:
-                                                td #{kill.agent.name}
-                                              tr
-                                                th Corporation:
-                                                td #{kill.corporation.name}
-                                              tr
-                                                th Robot:
-                                                td #{kill.robot.name}
-                                              tr
-                                                th Zone:
-                                                td #{kill.zone.name}
-                                              tr
-                                                th Time:
-                                                td #{moment(kill.date).format('YYYY-MM-DD HH:mm:ss')}
-                                              tr
-                                                th Damage Received:
-                                                td #{Math.round(kill.damageReceived)}
-                              .col-md-6
-                                .table-responsive
-                                  table.table.table-dark.table-striped.table-bordered.table-sm
-                                    thead
-                                      tr
-                                        th.th-inner.text-center Agent
-                                        th.th-inner.text-center Robot
-                                        th.th-inner.text-center Damage Dealt
-                                    tbody
-                                      for attacker in kill.attackers
-                                        tr
-                                          if attacker.hasKillingBlow
-                                            td #{attacker._embedded.agent.name}
-                                              br
-                                              | #{attacker._embedded.corporation.name}
-                                            td #{attacker._embedded.robot.name}
-                                            td.text-right #{Math.round(attacker.damageDealt)} (KILLING BLOW)
-                                              br
-                                              | #{(attacker.damageDealt / kill.damageReceived).toFixed(4) * 100}%
-                                          else
-                                            td #{attacker._embedded.agent.name}
-                                              br
-                                              | #{attacker._embedded.corporation.name}
-                                            td #{attacker._embedded.robot.name}
-                                            td.text-right #{Math.round(attacker.damageDealt)}
-                                              br
-                                              | #{(attacker.damageDealt / kill.damageReceived).toFixed(4) * 100}%
-            .row.float-right
-                .col-md-12
-                    nav.pull-right(aria-label='Page navigation example')
-                            ul.pagination
-                                if kills.hasPrevPage
-                                    li.page-item
-                                        a.page-link(href='/corporations?id=#{corporationInfo.id}&page=1&limit=10') First
-                                    li.page-item
-                                        a.page-link(href='/corporations?id=#{corporationInfo.id}&page=#{kills.page - 1}&limit=10') <<
-                                if kills.page >= 4
-                                    li.page-item
-                                        a.page-link(href='/corporations?id=#{corporationInfo.id}&page=#{kills.page - 3}&limit=10') #{kills.page - 3}
-                                if kills.page >= 3
-                                    li.page-item
-                                        a.page-link(href='/corporations?id=#{corporationInfo.id}&page=#{kills.page - 2}&limit=10') #{kills.page - 2}
-                                if kills.page >= 2
-                                    li.page-item
-                                        a.page-link(href='/corporations?id=#{corporationInfo.id}&page=#{kills.page - 1}&limit=10') #{kills.page - 1}
-                                li.page-item.active
-                                    a.page-link(href='/corporations?id=#{corporationInfo.id}&page=#{kills.page}&limit=10') #{kills.page}
-                                if kills.page <= kills.totalPages - 1
-                                    li.page-item
-                                        a.page-link(href='/corporations?id=#{corporationInfo.id}&page=#{kills.page + 1}&limit=10') #{kills.page + 1}
-                                if kills.page <= kills.totalPages - 2
-                                    li.page-item
-                                        a.page-link(href='/corporations?id=#{corporationInfo.id}&page=#{kills.page + 2}&limit=10') #{kills.page + 2}
-                                if kills.page <= kills.totalPages - 3
-                                    li.page-item
-                                        a.page-link(href='/corporations?id=#{corporationInfo.id}&page=#{kills.page + 3}&limit=10') #{kills.page + 3}
-                                if kills.hasNextPage
-                                    li.page-item
-                                        a.page-link(href='/corporations?id=#{corporationInfo.id}&page=#{kills.page + 1}&limit=10') >>
-                                    li.page-item
-                                        a.page-link(href='/corporations?id=#{corporationInfo.id}&page=#{kills.totalPages}&limit=10') Last
-                    p Total Kills: #{kills.totalDocs}
-    script.
-      function show_hide_detail(killID) {
-        $('#' + killID).toggle();
-      }
+	//- Start kill and loss table
+	.row
+		.col-md-12
+			h2 Recent Activity
+			table.table.table-dark.table-hover.table-striped
+				thead
+					tr
+						th Time
+						th Bot
+						th Zone
+						th Victim
+						th Final Blow
+				tbody
+					//- Iterate through all the kills that were passed from the server
+					for kill in kills.docs
+						if kill.corporationID == corporationInfo.id
+							- var rowStyle = 'background-color:#ff634785'
+						else
+							- var rowStyle = 'background-color:#77dd7782'
+						tr(style="#{rowStyle}", onclick="show_hide_detail(#{kill.id})")
+							td #{moment(kill.date).format('YYYY-MM-DD HH:mm:ss')}
+							td
+								//- Check to see if the robot that was killed was a regular, MK2, or prototype
+								//- This returns the MINI image of the robot
+								if kill.robot.name.includes(' MK2')
+									- var robotName = kill.robot.name
+									- robotName = robotName.replace(' MK2', '')
+									- robotName = robotName.toLowerCase()
+									a(href='/robots?id=#{kill.robot.id}')
+										img.rounded-sm(src='/images/icon_mech_#{robotName}_mk2_mini.png', alt='#{kill.robot.name')
+								else if kill.robot.name.includes(' PR')
+									- var robotName = kill.robot.name
+									- robotName = robotName.replace(' PR', '')
+									- robotName = robotName.toLowerCase()
+									img.rounded-sm(src='/images/icon_mech_#{robotName}_pr_mini.png', alt='#{kill.robot.name}')
+								else
+									a(href='/robots?id=#{kill.robot.id}')
+										img.rounded-sm(src='/images/icon_mech_#{kill.robot.name}_mini.png', alt='#{kill.robot.name}')
+							td
+								a(href='/zones?id=#{kill.zone.id}') #{kill.zone.name}
+							td
+								a(href='/agents?id=#{kill.agent.id}') #{kill.agent.name}
+								a(href='/robots?id=#{kill.robot.id}') 
+									.span.badge.badge-secondary #{kill.robot.name}
+								br
+								a(href='/corporations?id=#{kill.corporation.id}') #{kill.corporation.name}
+							//- Iterate through the list of attackers and get the killing blow
+							for attacker in kill.attackers
+								if attacker.hasKillingBlow
+									td
+										a(href='/agents?id=#{attacker._embedded.agent.id}') #{attacker._embedded.agent.name} 
+											if kill.attackers.length == 1
+												.span.badge.badge-info SOLO
+											else
+												.span.badge.badge-info #{kill.attackers.length}
+											br
+											a(href='/corporations?id=#{attacker._embedded.corporation.id}') #{attacker._embedded.corporation.name}
+
+						//- Start hidden kill detail table
+						tr(id='#{kill.id}', style='display:none;')
+							td(colspan='5')
+								.row
+									.col-md-6
+										.table-responsive
+											//- Start robot image table
+											table.table.table-dark.table-striped.table-bordered.table-sm
+												tbody
+													tr
+														td
+															//- Check to see if the robot that was killed was a regular, MK2, or prototype
+															//- This returns the REGULAR image of the robot
+															if kill.robot.name.includes(' MK2')
+																- var robotName = kill.robot.name
+																- robotName = robotName.replace(' MK2', '')
+																- robotName = robotName.toLowerCase()
+																a(href='/robots?id=#{kill.robot.id}')
+																	img.rounded-sm(src='/images/icon_mech_#{robotName}_mk2.png', alt='#{kill.robot.name')
+															else if kill.robot.name.includes(' PR')
+																- var robotName = kill.robot.name
+																- robotName = robotName.replace(' PR', '')
+																- robotName = robotName.toLowerCase()
+																img.rounded-sm(src='/images/icon_mech_#{robotName}_pr.png', alt='#{kill.robot.name}')
+															else
+																a(href='/robots?id=#{kill.robot.id}')
+																	img.rounded-sm(src='/images/icon_mech_#{kill.robot.name}.png', alt='#{kill.robot.name}')
+														td
+															//- Start victim detail table
+															table.table-dark.table-striped.table-bordered
+																tbody
+																	tr
+																		th Agent:
+																		td #{kill.agent.name}
+																	tr
+																		th Corporation:
+																		td #{kill.corporation.name}
+																	tr
+																		th Robot:
+																		td #{kill.robot.name}
+																	tr
+																		th Zone:
+																		td #{kill.zone.name}
+																	tr
+																		th Time:
+																		td #{moment(kill.date).format('YYYY-MM-DD HH:mm:ss')}
+																	tr
+																		th Damage Received:
+																		td #{Math.round(kill.damageReceived)}
+									.col-md-6
+										.table-response
+											//- Start attacker detail table
+											table.table.table-dark.table-striped.table-bordered.table-sm
+												thead
+													tr
+														th.text-center Agent
+														th.text-center Robot
+														th.text-center Damage Dealt
+												tbody
+													//- Iterate through the attackers
+													for attacker in kill.attackers
+														tr
+															td #{attacker._embedded.agent.name}
+																br
+																| #{attacker._embedded.corporation.name}
+															td #{attacker._embedded.robot.name}
+															td.text-right
+																if attacker.hasKillingBlow
+																	.span.badge.badge-danger KILLING BLOW
+																	br
+																| #{Math.round(attacker.damageDealt)} 
+																.span.badge.badge-light #{Math.round((attacker.damageDealt / kill.damageReceived) * 100)}%
+																br
+																if attacker.totalEcmAttempts > 0
+																	| #{Math.round(attacker.totalEcmAttempts)} 
+																	.span.badge.badge-primary # ECM
+																	br
+																if attacker.sensorSuppressions > 0
+																	| #{Math.round(attacker.sensorSuppressions)} 
+																	.span.badge.badge-warning SS
+																	br
+																if attacker.energyDispersed > 0
+																	| #{Math.round(attacker.energyDispersed)} 
+																	.span.badge.badge-success ED
+	//- Start pagination navigation
+	.row.float-right
+		.col-md-12
+			nav.pull-right
+				ul.pagination
+					if kills.hasPrevPage
+						li.page-item
+							a.page-link(href='/corporations?id=#{corporationInfo.id}&page=1&limit=10') First
+						li.page-item
+							a.page-link(href='/corporations?id=#{corporationInfo.id}&page=#{kills.page - 1}&limit=10') <<
+					if kills.page >= 4
+						li.page-item
+							a.page-link(href='/corporations?id=#{corporationInfo.id}&page=#{kills.page - 3}&limit=10') #{kills.page - 3}
+					if kills.page >= 3
+						li.page-item
+							a.page-link(href='/corporations?id=#{corporationInfo.id}&page=#{kills.page - 2}&limit=10') #{kills.page - 2}
+					if kills.page >= 2
+						li.page-item
+							a.page-link(href='/corporations?id=#{corporationInfo.id}&page=#{kills.page - 1}&limit=10') #{kills.page - 1}
+					li.page-item.active
+						a.page-link(href='/corporations?id=#{corporationInfo.id}&page=#{kills.page}&limit=10') #{kills.page}
+					if kills.page <= kills.totalPages - 1
+						li.page-item
+							a.page-link(href='/corporations?id=#{corporationInfo.id}&page=#{kills.page + 1}&limit=10') #{kills.page + 1}
+					if kills.page <= kills.totalPages - 2
+						li.page-item
+							a.page-link(href='/corporations?id=#{corporationInfo.id}&page=#{kills.page + 2}&limit=10') #{kills.page + 2}
+					if kills.page <= kills.totalPages - 3
+						li.page-item
+							a.page-link(href='/corporations?id=#{corporationInfo.id}&page=#{kills.page + 3}&limit=10') #{kills.page + 3}
+					if kills.hasNextPage
+						li.page-item
+							a.page-link(href='/corporations?id=#{corporationInfo.id}&page=#{kills.page + 1}&limit=10') >>
+						li.page-item
+							a.page-link(href='/corporations?id=#{corporationInfo.id}&page=#{kills.totalPages}&limit=10') Last
+			p Total Kills: #{kills.totalDocs}
+
+	//- Start script block
+	script.
+		function show_hide_detail(killID) {
+			$('#' + killID).toggle();
+		}

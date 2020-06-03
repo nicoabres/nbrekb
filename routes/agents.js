@@ -43,10 +43,12 @@ router.get('/', function(req, res, next) {
       }
     ])
 
-    Agent.aggregatePaginate(agentListAggregate, paginateOptions).then(function (agents) {
-      res.render('agent_list', {title: 'Agents | nbreKB', agents: agents})
-    }).catch(function(error) {
-      console.error(error)
+    Kill.find({}, function (error, kills) {
+      Agent.aggregatePaginate(agentListAggregate, paginateOptions).then(function (agents) {
+        res.render('agent_list', {title: 'Agents | nbreKB', agents: agents, kills: kills})
+      }).catch(function(error) {
+        console.error(error)
+      })
     })
   } else {
 

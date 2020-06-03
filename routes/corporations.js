@@ -30,14 +30,13 @@ router.get('/', function(req, res, next) {
       }
     ])
 
-    Corporation.aggregatePaginate(corporationListAggregate, paginateOptions).then(function (corporations) {
-      res.render('corporation_list', {title: 'Corporations | nbreKB', corporations: corporations})
-    }).catch(function(error) {
-      console.error(error)
+    Kill.find({}, function (error, kills) {
+      Corporation.aggregatePaginate(corporationListAggregate, paginateOptions).then(function (corporations) {
+        res.render('corporation_list', {title: 'Corporations | nbreKB', corporations: corporations, kills: kills})
+      }).catch(function(error) {
+        console.error(error)
+      })
     })
-    // Corporation.find({}, function (error, corporations) {
-    //   res.render('corporation_list', {title: 'Corporations | nbreKB', corporations: corporations})
-    // })
   } else {
     
     if (!req.query.page) {

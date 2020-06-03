@@ -12,6 +12,14 @@ block content
 		tbody
 			if robots.docs.length
 				for robot in robots.docs
+					- var totalKills = 0
+					- var totalLosses = 0
+					for kill in kills
+						if robot.id == kill.robotID
+							- totalLosses++
+						for attacker in kill.attackers
+							if robot.id == attacker._embedded.robot.id
+								- totalKills++
 					if !robot.name
 						tr
 							td
@@ -33,8 +41,8 @@ block content
 									img.rounded-sm(src='/images/icon_mech_#{robot.name}_mini.png', alt='#{robot.name}')
 							td 
 								a(href='/robots?id=#{robot.id}') #{robot.name}
-							td N/A
-							td N/A
+							td #{totalKills}
+							td #{totalLosses}
 	nav.pull-right(aria-label='Page navigation example')
 			ul.pagination
 				if robots.hasPrevPage

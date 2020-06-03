@@ -31,8 +31,10 @@ router.get('/', function(req, res, next) {
 			}
 		])
 
-		Robot.aggregatePaginate(robotListAggregate, paginateOptions).then(function (robots) {
-			res.render('robot_list', { title: 'Robots | nbreKB', robots: robots})
+		Kill.find({}, function (error, kills) {
+			Robot.aggregatePaginate(robotListAggregate, paginateOptions).then(function (robots) {
+				res.render('robot_list', { title: 'Robots | nbreKB', robots: robots, kills: kills})
+			})
 		})
 	} else {
 		if (!req.query.page) {

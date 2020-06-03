@@ -12,13 +12,21 @@ block content
 		tbody
 				if agents.docs.length
 					for agent in agents.docs
+						- var totalKills = 0
+						- var totalLosses = 0
+						for kill in kills
+							if agent.id == kill.agentID
+								- totalLosses++
+							for attacker in kill.attackers
+								if agent.id == attacker._embedded.agent.id
+									- totalKills++
 						tr
 							td 
 								a(href='/agents?id=#{agent.id}') #{agent.name}
 							td 
 								a(href='/corporations?id=#{agent.corporation.id}') #{agent.corporation.name}
-							td N/A
-							td N/A
+							td #{totalKills}
+							td #{totalLosses}
 	nav.pull-right(aria-label='Page navigation example')
 			ul.pagination
 				if agents.hasPrevPage

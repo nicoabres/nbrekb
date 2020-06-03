@@ -30,8 +30,10 @@ router.get('/', function(req, res, next) {
       }
     ])
 
-    Zone.aggregatePaginate(zoneListAggregate, paginateOptions).then(function (zones) {
-      res.render('zone_list', { title: 'Zones | nbreKB', zones: zones})
+    Kill.find({}, function (error, kills) {
+      Zone.aggregatePaginate(zoneListAggregate, paginateOptions).then(function (zones) {
+        res.render('zone_list', { title: 'Zones | nbreKB', zones: zones, kills: kills})
+      })
     })
   } else {
     if (!req.query.page) {

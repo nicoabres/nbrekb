@@ -11,11 +11,16 @@ block content
 		tbody
 			if zones.docs.length
 				for zone in zones.docs
+					- var totalKills = 0
+					for kill in kills
+						if zone.id == kill.zoneID
+							- totalKills++
+						
 					tr
 						td 
 							a(href='/zones?id=#{zone.id}') #{zone.name}
-						td N/A
-						td N/A
+						td #{totalKills}
+						td 0
 	nav.pull-right(aria-label='Page navigation example')
 			ul.pagination
 				if zones.hasPrevPage
