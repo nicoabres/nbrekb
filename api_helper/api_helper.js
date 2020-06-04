@@ -38,23 +38,24 @@ function getKills() {
 		var page = 1;
 
 		while (page <= lastPage) {
+			if (alreadyUpToDate) {
+				killPages = "Already up to date";
+				break;
+			}
 			console.log(`Getting kill page ${page} out of ${lastPage} kill pages.`)
 			var kills = await axios.get(`https://api.openperpetuum.com/killboard/kill?order-by[0][type]=field&order-by[0][field]=date&order-by[0][direction]=desc&page=${page}`);
 			if (page == 1) {
 				var latestKill = kills.data._embedded.kill[0];
-				Kill.find({ id: latestKill.id}, function(error, result) {
+				Kill.find({ id: latestKill.id }, function (error, result) {
 					if (result.length) {
+						console.log('Kills collection already up to date.');
 						alreadyUpToDate = true;
 					}
 				})
-			}
-			
-			if (alreadyUpToDate) {
-				return killPages = "Already up to date";
-			} else {
-				killPages.push(kills.data._embedded.kill);
 				page++;
 			}
+			killPages.push(kills.data._embedded.kill);
+			page++;
 		}
 
 		return killPages;
@@ -62,7 +63,7 @@ function getKills() {
 
 	// Iterate though each page of kills and get the just the invdividual kills
 	getKillPages().then(function (killPages) {
-		if (killPages = 'Already up to date') {
+		if (killPages == 'Already up to date') {
 			console.log('Kill collection is already up to date.')
 			return;
 		} else {
@@ -70,6 +71,63 @@ function getKills() {
 
 			killPages.forEach(killPage => {
 				killPage.forEach(kill => {
+					kill._embedded.attackers.forEach(attacker => {
+						if (attacker._embedded.robot.id == 41) {
+							attacker._embedded.robot.name = 'Baphomet MK2'
+						} else if (attacker._embedded.robot.id == 61) {
+							attacker._embedded.robot.name = 'Lithus MK2'
+						} else if (attacker._embedded.robot.id == 56) {
+							attacker._embedded.robot.name = 'Vagabond MK2'
+						} else if (attacker._embedded.robot.id == 51) {
+							attacker._embedded.robot.name = 'Termis MK2'
+						} else if (attacker._embedded.robot.id == 40) {
+							attacker._embedded.robot.name = 'Artemis MK2'
+						} else if (attacker._embedded.robot.id == 60) {
+							attacker._embedded.robot.name = 'Prometheus MK2'
+						} else if (attacker._embedded.robot.id == 50) {
+							attacker._embedded.robot.name = 'Yagel MK2' 
+						} else if (attacker._embedded.robot.id == 55) {
+							attacker._embedded.robot.name = 'Mesmer MK2'
+						} else if (attacker._embedded.robot.id == 46) {
+							attacker._embedded.robot.name = 'Seth MK2'
+						} else if (attacker._embedded.robot.id == 45) {
+							attacker._embedded.robot.name = 'Kain MK2'
+						} else if (attacker._embedded.robot.id == 38) {
+							attacker._embedded.robot.name = 'Cameleon MK2'
+						} else if (attacker._embedded.robot.id == 43) {
+							attacker._embedded.robot.name = 'Arbalest MK2'
+						} else if (attacker._embedded.robot.id == 48) {
+							attacker._embedded.robot.name = 'Intakt MK2'
+						} else if (attacker._embedded.robot.id == 53) {
+							attacker._embedded.robot.name = 'Riveler MK2'
+						} else if (attacker._embedded.robot.id == 58) {
+							attacker._embedded.robot.name = 'Zenith MK2'
+						} else if (attacker._embedded.robot.id == 63) {
+							attacker._embedded.robot.name = 'Sequer MK2'
+						} else if (attacker._embedded.robot.id == 39) {
+							attacker._embedded.robot.name = 'Ictus MK2'
+						} else if (attacker._embedded.robot.id == 44) {
+							attacker._embedded.robot.name = 'Waspish MK2'
+						} else if (attacker._embedded.robot.id == 49) {
+							attacker._embedded.robot.name = 'Gropho MK2'
+						} else if (attacker._embedded.robot.id == 54) {
+							attacker._embedded.robot.name = 'Ictus MK2'
+						} else if (attacker._embedded.robot.id == 42) {
+							attacker._embedded.robot.name = 'Tyrannos MK2'
+						} else if (attacker._embedded.robot.id== 59) {
+							attacker._embedded.robot.name = 'Symbiont MK2'
+						} else if (attacker._embedded.robot.id == 47) {
+							attacker._embedded.robot.name = 'Cameleon MK2'
+						} else if (attacker._embedded.robot.id == 52) {
+							attacker._embedded.robot.name = 'Troiar MK2'
+						} else if (attacker._embedded.robot.id == 57) {
+							attacker._embedded.robot.name = 'Castel MK2'
+						} else if (attacker._embedded.robot.id == 62) {
+							attacker._embedded.robot.name = 'Argano MK2'
+						} else if (attacker._embedded.robot.id == 64) {
+							attacker._embedded.robot.name = 'Arbalest PR'
+						}
+					})
 					kills.push(kill);
 				})
 			})
