@@ -10,6 +10,8 @@ var agentSchema = new Schema({
     corporationID: Number
 })
 
+agentSchema.index({ id: 1 });
+
 agentSchema.plugin(aggregatePaginate);
 
 // Create our kill model

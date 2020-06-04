@@ -7,9 +7,10 @@ var logger = require('morgan');
 
 // Manually added modules
 var mongoose = require('mongoose');
+var childProcess = require('child_process');
 
 // Connect to our mongodb database using mongoose
-mongoose.connect('mongodb://localhost/local');
+mongoose.connect('mongodb://127.0.0.1/local');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
@@ -52,5 +53,7 @@ app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.render('error');
 });
+
+var apiHelper = childProcess.fork('api_helper/api_helper.js');
 
 module.exports = app;

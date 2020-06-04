@@ -72,7 +72,7 @@ router.get('/', function(req, res, next) {
     },
     {
       '$unwind': '$zone'
-    },
+    }
   ])
 
   Kill.aggregatePaginate(killListAggregate, paginateOptions).then(function (kills) {

@@ -10,6 +10,8 @@ var zoneSchema = new Schema({
     id: Number
 })
 
+zoneSchema.index({ id: 1 });
+
 zoneSchema.plugin(aggregatePaginate);
 
 // Create our kill model

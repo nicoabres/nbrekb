@@ -9,6 +9,8 @@ var corporationSchema = new Schema({
     id: Number
 })
 
+corporationSchema.index({ id: 1 });
+
 corporationSchema.plugin(aggregatePaginate);
 
 // Create our kill model

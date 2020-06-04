@@ -10,6 +10,8 @@ var robotSchema = new Schema({
     id: Number
 })
 
+robotSchema.index({ id: 1 });
+
 robotSchema.plugin(aggregatePaginate);
 
 // Create our kill model

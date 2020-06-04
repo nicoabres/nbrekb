@@ -2,15 +2,15 @@
 var axios = require('axios');
 var mongoose = require('mongoose');
 
-// Connect to our mongodb database using mongoose
-mongoose.connect('mongodb://localhost/local');
-
 // Get our Kill model
-var Kill = require('../models/kill');
-var Corporation = require('../models/corporation');
-var Agent = require('../models/agent');
-var Robot = require('../models/robot');
-var Zone = require('../models/zone');
+var Kill = require('..//models/kill.js');
+var Corporation = require('../models/corporation.js');
+var Agent = require('../models/agent.js');
+var Robot = require('../models/robot.js');
+var Zone = require('../models/zone.js');
+
+// Connect to our mongodb database using mongoose
+mongoose.connect('mongodb://127.0.0.1/local');
 
 // Start getKills function
 function getKills() {
@@ -69,19 +69,19 @@ function getKills() {
 				attackers: kill._embedded.attackers
 			});
 
-			Kill.find({ id: kill.id }, function(error, result) {
-				if (result.length) {
-					console.log('Kill already exists');
-				} else {
-					newKill.save(function(error) {
-						if (error) {
-							console.error(error);
-						} else {
-							console.log('Kill successfully added');
-						}
-					})
-				}
-			})
+		    Kill.find({id:kill.id}, function(error, result) {
+		    	if (result.length) {
+		    		console.log('Kill already exists');
+		    	} else {
+		    		newKill.save(function(error) {
+		    			if (error){
+		    				console.error(error);
+		    			} else {
+		    				console.log('Kill successfully added.');
+		    			}
+		    		})
+		    	}
+		    })
 		})
 	})
 }
@@ -102,7 +102,7 @@ function getCorporations() {
 	var getLastPage = async () => {
 		var killboardCorporationData = await getKillboardCorporationData();
 
-		return await killboardCorporationData.page_count;
+		return await killboardCorporationData.data.page_count;
 	};
 
 	// Loop thorugh all available pages of the API using the last page
@@ -111,7 +111,7 @@ function getCorporations() {
 		var lastPage = await getLastPage();
 		var page = 1;
 
-		while (page < = lastPage) {
+		while (page <= lastPage) {
 			console.log(`Getting corporation page ${page} out of ${lastPage} corporation pages`);
 			var corporations = await axios.get(`https://api.openperpetuum.com/killboard/corporation?page=${page}`);
 			corporationPages.push(corporations.data._embedded.corporation);
@@ -126,6 +126,7 @@ function getCorporations() {
 
 		corporationPages.forEach(corporationPage => {
 			corporationPage.forEach(corporation => {
+				console.log('Made it this far!')
 				corporations.push(corporation);
 			})
 		})
@@ -195,8 +196,8 @@ function getAgents() {
 		agentPages.forEach(agentPage => {
 			agentPage.forEach(agent => {
 				agents.push(agent);
-			}
-		}
+			})
+		})
 
 		agents.forEach(agent => {
 			var newAgent = new Agent({
@@ -236,7 +237,7 @@ function getRobots() {
 
 	// Get the last page from the first page of the API
 	var getLastPage = async () => {
-		var killboardRobotData = awit getKillboardRobotData();
+		var killboardRobotData = await getKillboardRobotData();
 
 		return await killboardRobotData.data.page_count;
 	};
@@ -259,6 +260,7 @@ function getRobots() {
 
 	// Do something with the pages
 	getRobotPages().then(function(robotPages) {
+		var robots = [];
 		robotPages.forEach(robotPage => {
 			robotPage.forEach(robot => {
 				if (robot.id == 41) {
@@ -381,7 +383,7 @@ function getZones() {
 	};
 
 	// Do something with the pages
-	getzonePages().then(function(zonePages) {
+	getZonePages().then(function(zonePages) {
 		var zones = [];
 
 		zonePages.forEach(zonePage => {
@@ -419,6 +421,7 @@ getCorporations();
 getAgents();
 getZones();
 getRobots();
+
 
 setInterval(function() {
   getKills();

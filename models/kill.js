@@ -16,6 +16,8 @@ var killSchema = new Schema({
     attackers: Array
 })
 
+killSchema.index({ id: 1 });
+
 killSchema.plugin(aggregatePaginate);
 
 // Create our kill model
