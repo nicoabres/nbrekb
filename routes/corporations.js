@@ -9,6 +9,38 @@ var moment = require('moment');
 var Corporation = require('../models/corporation');
 var Kill = require('../models/kill');
 
+/* POST corporations listing. */
+router.post('/', function(req, res, next) {
+  if (!req.query.page) {
+    var paginateOptions = {
+      page: 1,
+      limit: 10
+    }
+  } else {
+    var paginateOptions = {
+      page: req.query.page,
+      limit: req.query.limit
+    }
+  }
+
+  var corporationListAggregate = Corporation.aggregate([
+    {
+      '$match': {
+        'name': {'$regex': req.body.searchEntry.toString(), '$options': 'i'}
+      }
+    },
+    {
+      '$sort': {'name': 1}
+    }
+  ])
+
+  Kill.find({}, function(error, kills) {
+    Corporation.aggregatePaginate(corporationListAggregate, paginateOptions).then(function (corporations) {
+      res.render('corporation_list', {title: 'Corporations | nbreKB', corporations: corporations, kills: kills, searchEntry: req.body.searchEntry})
+    })
+  })
+})
+
 /* GET corporations listing. */
 router.get('/', function(req, res, next) {
   if (!req.query.id) {

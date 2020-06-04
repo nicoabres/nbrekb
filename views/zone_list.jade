@@ -21,36 +21,39 @@ block content
 							a(href='/zones?id=#{zone.id}') #{zone.name}
 						td #{totalKills}
 						td 0
-	nav.pull-right(aria-label='Page navigation example')
-			ul.pagination
-				if zones.hasPrevPage
-					li.page-item
-						a.page-link(href='/zones?page=1&limit=10') First
-					li.page-item
-						a.page-link(href='/zones?page=#{zones.page - 1}&limit=10') <<
-				if zones.page >= 4
-					li.page-item
-						a.page-link(href='/zones?page=#{zones.page - 3}&limit=10') #{zones.page - 3}
-				if zones.page >= 3
-					li.page-item
-						a.page-link(href='/zones?page=#{zones.page - 2}&limit=10') #{zones.page - 2}
-				if zones.page >= 2
-					li.page-item
-						a.page-link(href='/zones?page=#{zones.page - 1}&limit=10') #{zones.page - 1}
-				li.page-item.active
-					a.page-link(href='/zones?page=#{zones.page}&limit=10') #{zones.page}
-				if zones.page <= zones.totalPages - 1
-					li.page-item
-						a.page-link(href='/zones?page=#{zones.page + 1}&limit=10') #{zones.page + 1}
-				if zones.page <= zones.totalPages - 2
-					li.page-item
-						a.page-link(href='/zones?page=#{zones.page + 2}&limit=10') #{zones.page + 2}
-				if zones.page <= zones.totalPages - 3
-					li.page-item
-						a.page-link(href='/zones?page=#{zones.page + 3}&limit=10') #{zones.page + 3}
-				if zones.hasNextPage
-					li.page-item
-						a.page-link(href='/zones?page=#{zones.page + 1}&limit=10') >>
-					li.page-item
-						a.page-link(href='/zones?page=#{zones.totalPages}&limit=10') Last
-	p Total Zones: #{zones.totalDocs}
+
+	.row.float-right
+		.col-md-12
+			nav
+				ul.pagination.float-right
+					if zones.hasPrevPage
+						li.page-item
+							a.page-link(href='/zones?page=1&limit=10') First
+						li.page-item
+							a.page-link(href='/zones?page=#{zones.page - 1}&limit=10') <<
+					if zones.page >= 4
+						li.page-item
+							a.page-link(href='/zones?page=#{zones.page - 3}&limit=10') #{zones.page - 3}
+					if zones.page >= 3
+						li.page-item
+							a.page-link(href='/zones?page=#{zones.page - 2}&limit=10') #{zones.page - 2}
+					if zones.page >= 2
+						li.page-item
+							a.page-link(href='/zones?page=#{zones.page - 1}&limit=10') #{zones.page - 1}
+					li.page-item.active
+						a.page-link(href='/zones?page=#{zones.page}&limit=10') #{zones.page}
+					if zones.page <= zones.totalPages - 1
+						li.page-item
+							a.page-link(href='/zones?page=#{zones.page + 1}&limit=10') #{zones.page + 1}
+					if zones.page <= zones.totalPages - 2
+						li.page-item
+							a.page-link(href='/zones?page=#{zones.page + 2}&limit=10') #{zones.page + 2}
+					if zones.page <= zones.totalPages - 3
+						li.page-item
+							a.page-link(href='/zones?page=#{zones.page + 3}&limit=10') #{zones.page + 3}
+					if zones.hasNextPage
+						li.page-item
+							a.page-link(href='/zones?page=#{zones.page + 1}&limit=10') >>
+						li.page-item
+							a.page-link(href='/zones?page=#{zones.totalPages}&limit=10') Last
+			p.float-right Total Zones: #{zones.totalDocs}

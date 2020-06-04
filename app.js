@@ -8,6 +8,7 @@ var logger = require('morgan');
 // Manually added modules
 var mongoose = require('mongoose');
 var childProcess = require('child_process');
+var bodyParser = require('body-parser');
 
 // Connect to our mongodb database using mongoose
 mongoose.connect('mongodb://127.0.0.1/local');
@@ -30,6 +31,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(bodyParser.urlencoded({extended: true}));
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);

@@ -43,36 +43,38 @@ block content
 								a(href='/robots?id=#{robot.id}') #{robot.name}
 							td #{totalKills}
 							td #{totalLosses}
-	nav.pull-right(aria-label='Page navigation example')
-			ul.pagination
-				if robots.hasPrevPage
-					li.page-item
-						a.page-link(href='/robots?page=1&limit=10') First
-					li.page-item
-						a.page-link(href='/robots?page=#{robots.page - 1}&limit=10') <<
-				if robots.page >= 4
-					li.page-item
-						a.page-link(href='/robots?page=#{robots.page - 3}&limit=10') #{robots.page - 3}
-				if robots.page >= 3
-					li.page-item
-						a.page-link(href='/robots?page=#{robots.page - 2}&limit=10') #{robots.page - 2}
-				if robots.page >= 2
-					li.page-item
-						a.page-link(href='/robots?page=#{robots.page - 1}&limit=10') #{robots.page - 1}
-				li.page-item.active
-					a.page-link(href='/robots?page=#{robots.page}&limit=10') #{robots.page}
-				if robots.page <= robots.totalPages - 1
-					li.page-item
-						a.page-link(href='/robots?page=#{robots.page + 1}&limit=10') #{robots.page + 1}
-				if robots.page <= robots.totalPages - 2
-					li.page-item
-						a.page-link(href='/robots?page=#{robots.page + 2}&limit=10') #{robots.page + 2}
-				if robots.page <= robots.totalPages - 3
-					li.page-item
-						a.page-link(href='/robots?page=#{robots.page + 3}&limit=10') #{robots.page + 3}
-				if robots.hasNextPage
-					li.page-item
-						a.page-link(href='/robots?page=#{robots.page + 1}&limit=10') >>
-					li.page-item
-						a.page-link(href='/robots?page=#{robots.totalPages}&limit=10') Last
-	p Total Robots: #{robots.totalDocs}
+	.row.float-right
+		.col-md-12
+			nav
+				ul.pagination.float-right
+					if robots.hasPrevPage
+						li.page-item
+							a.page-link(href='/robots?page=1&limit=10') First
+						li.page-item
+							a.page-link(href='/robots?page=#{robots.page - 1}&limit=10') <<
+					if robots.page >= 4
+						li.page-item
+							a.page-link(href='/robots?page=#{robots.page - 3}&limit=10') #{robots.page - 3}
+					if robots.page >= 3
+						li.page-item
+							a.page-link(href='/robots?page=#{robots.page - 2}&limit=10') #{robots.page - 2}
+					if robots.page >= 2
+						li.page-item
+							a.page-link(href='/robots?page=#{robots.page - 1}&limit=10') #{robots.page - 1}
+					li.page-item.active
+						a.page-link(href='/robots?page=#{robots.page}&limit=10') #{robots.page}
+					if robots.page <= robots.totalPages - 1
+						li.page-item
+							a.page-link(href='/robots?page=#{robots.page + 1}&limit=10') #{robots.page + 1}
+					if robots.page <= robots.totalPages - 2
+						li.page-item
+							a.page-link(href='/robots?page=#{robots.page + 2}&limit=10') #{robots.page + 2}
+					if robots.page <= robots.totalPages - 3
+						li.page-item
+							a.page-link(href='/robots?page=#{robots.page + 3}&limit=10') #{robots.page + 3}
+					if robots.hasNextPage
+						li.page-item
+							a.page-link(href='/robots?page=#{robots.page + 1}&limit=10') >>
+						li.page-item
+							a.page-link(href='/robots?page=#{robots.totalPages}&limit=10') Last
+			p.float-right Total Robots: #{robots.totalDocs}

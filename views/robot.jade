@@ -170,8 +170,8 @@ block content
 	//- Start pagination navigation
 	.row.float-right
 		.col-md-12
-			nav.pull-right
-				ul.pagination
+			nav
+				ul.pagination.float-right
 					if kills.hasPrevPage
 						li.page-item
 							a.page-link(href='/robots?id=#{robotInfo.id}&page=1&limit=10') First
@@ -202,7 +202,7 @@ block content
 							a.page-link(href='/robots?id=#{robotInfo.id}&page=#{kills.page + 1}&limit=10') >>
 						li.page-item
 							a.page-link(href='/robots?id=#{robotInfo.id}&page=#{kills.totalPages}&limit=10') Last
-			p Total Kills: #{kills.totalDocs}
+			p.float-right Total Kills: #{kills.totalDocs}
 
 	//- Start script block
 	script.
