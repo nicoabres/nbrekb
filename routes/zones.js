@@ -119,6 +119,7 @@ router.get('/', function(req, res, next) {
 
       Kill.countDocuments({'zoneID': parseInt(req.query.id)}).then(function (totalLosses) {
         Kill.countDocuments({'attackers._embedded.zone.id': parseInt(req.query.id)}).then(function (totalKills) {
+          console.log(totalKills)
           Kill.aggregatePaginate(killListAggregate, paginateOptions).then(function (kills) {
             res.render('zone', {title: zoneInfo.name + ' | Agent | nbreKB', kills: kills, zoneInfo: zoneInfo, totalLosses: totalLosses, totalKills: totalKills, moment: moment})
           })

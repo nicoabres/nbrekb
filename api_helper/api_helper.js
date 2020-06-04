@@ -32,6 +32,7 @@ function getKills() {
 
 	// Loop thorugh all available pages of the API using the last page
 	var getKillPages = async () => {
+		var alreadyUpToDate = false;
 		var killPages = [];
 		var lastPage = await getLastPage();
 		var page = 1;
@@ -39,8 +40,21 @@ function getKills() {
 		while (page <= lastPage) {
 			console.log(`Getting kill page ${page} out of ${lastPage} kill pages.`)
 			var kills = await axios.get(`https://api.openperpetuum.com/killboard/kill?order-by[0][type]=field&order-by[0][field]=date&order-by[0][direction]=desc&page=${page}`);
-			killPages.push(kills.data._embedded.kill);
-			page++;
+			if (page == 1) {
+				var latestKill = kills.data._embedded.kill[0];
+				Kill.find({ id: latestKill.id}, function(error, result) {
+					if (result.length) {
+						alreadyUpToDate = true;
+					}
+				})
+			}
+			
+			if (alreadyUpToDate) {
+				return killPages = "Already up to date";
+			} else {
+				killPages.push(kills.data._embedded.kill);
+				page++;
+			}
 		}
 
 		return killPages;
@@ -48,41 +62,46 @@ function getKills() {
 
 	// Iterate though each page of kills and get the just the invdividual kills
 	getKillPages().then(function (killPages) {
-		var kills = [];
+		if (killPages = 'Already up to date') {
+			console.log('Kill collection is already up to date.')
+			return;
+		} else {
+			var kills = [];
 
-		killPages.forEach(killPage => {
-			killPage.forEach(kill => {
-				kills.push(kill);
+			killPages.forEach(killPage => {
+				killPage.forEach(kill => {
+					kills.push(kill);
+				})
 			})
-		})
 
-		kills.forEach(kill => {
-			var newKill = new Kill({
-				uid: kill.uid,
-				damageReceived: kill.damageReceived,
-				date: kill.date,
-				id: kill.id,
-				agentID: kill._embedded.agent.id,
-				corporationID: kill._embedded.corporation.id,
-				robotID: kill._embedded.robot.id,
-				zoneID: kill._embedded.zone.id,
-				attackers: kill._embedded.attackers
-			});
+			kills.forEach(kill => {
+				var newKill = new Kill({
+					uid: kill.uid,
+					damageReceived: kill.damageReceived,
+					date: kill.date,
+					id: kill.id,
+					agentID: kill._embedded.agent.id,
+					corporationID: kill._embedded.corporation.id,
+					robotID: kill._embedded.robot.id,
+					zoneID: kill._embedded.zone.id,
+					attackers: kill._embedded.attackers
+				});
 
-		    Kill.find({id:kill.id}, function(error, result) {
-		    	if (result.length) {
-		    		console.log('Kill already exists');
-		    	} else {
-		    		newKill.save(function(error) {
-		    			if (error){
-		    				console.error(error);
-		    			} else {
-		    				console.log('Kill successfully added.');
-		    			}
-		    		})
-		    	}
-		    })
-		})
+			    Kill.find({id:kill.id}, function(error, result) {
+			    	if (result.length) {
+			    		console.log('Kill already exists');
+			    	} else {
+			    		newKill.save(function(error) {
+			    			if (error){
+			    				console.error(error);
+			    			} else {
+			    				console.log('Kill successfully added.');
+			    			}
+			    		})
+			    	}
+			    })
+			})
+		}
 	})
 }
 // End getKills function
@@ -126,7 +145,6 @@ function getCorporations() {
 
 		corporationPages.forEach(corporationPage => {
 			corporationPage.forEach(corporation => {
-				console.log('Made it this far!')
 				corporations.push(corporation);
 			})
 		})
