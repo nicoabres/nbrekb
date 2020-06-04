@@ -141,17 +141,36 @@ block content
 											table.table.table-dark.table-striped.table-bordered.table-sm
 												thead
 													tr
+														th
 														th.text-center Agent
-														th.text-center Robot
 														th.text-center Damage Dealt
 												tbody
 													//- Iterate through the attackers
 													for attacker in kill.attackers
 														tr
-															td #{attacker._embedded.agent.name}
+															td
+																//- Check to see if the robot that was killed was a regular, MK2, or prototype
+																//- This returns the MINI image of the robot
+																if attacker._embedded.robot.name.includes(' MK2')
+																	- var robotName = attacker._embedded.robot.name
+																	- robotName = robotName.replace(' MK2', '')
+																	- robotName = robotName.toLowerCase()
+																	a(href='/robots?id=#{kill.robot.id}')
+																		img.rounded-sm(src='/images/icon_mech_#{robotName}_mk2_mini.png', alt='#{attacker._embedded.robot.name')
+																else if attacker._embedded.robot.name.includes(' PR')
+																	- var robotName = attacker._embedded.robot.name
+																	- robotName = robotName.replace(' PR', '')
+																	- robotName = robotName.toLowerCase()
+																	img.rounded-sm(src='/images/icon_mech_#{robotName}_pr_mini.png', alt='#{attacker._embedded.robot.name}')
+																else
+																	a(href='/robots?id=#{attacker._embedded.robot.id}')
+																		img.rounded-sm(src='/images/icon_mech_#{attacker._embedded.robot.name.toLowerCase()}_mini.png', alt='#{attacker._embedded.robot.name}')
+															td 
+																a(href='/agents?id=#{attacker._embedded.agent.id}') #{attacker._embedded.agent.name} 
+																a(href='/robots?id=#{attacker._embedded.robot.id}') 
+																	.span.badge.badge-secondary #{attacker._embedded.robot.name}
 																br
-																| #{attacker._embedded.corporation.name}
-															td #{attacker._embedded.robot.name}
+																a(href='/corporations?id=#{attacker._embedded.corporation.id}') #{attacker._embedded.corporation.name}
 															td.text-right
 																if attacker.hasKillingBlow
 																	.span.badge.badge-danger KILLING BLOW
