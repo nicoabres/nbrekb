@@ -99,7 +99,7 @@ block content
 									td
 										a(href='/agents?id=#{attacker._embedded.agent.id}') #{attacker._embedded.agent.name} 
 											if kill.attackers.length == 1
-												.span.badge.badge-info SOLO
+												.span.badge.badge-info(style="background-color: purple") SOLO
 											else
 												.span.badge.badge-info #{kill.attackers.length}
 											br
