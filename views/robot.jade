@@ -3,7 +3,7 @@ extends layout
 block content
 	//- Start information and efficiency block
 	.row
-		.col-md-4
+		.col-md-5
 			table.table.table-dark
 				tbody
 					tr
@@ -24,10 +24,14 @@ block content
 							else
 								a(href='/robots?id=#{robotInfo.id}')
 									img.rounded-sm(src='/images/icon_mech_#{robotInfo.name.toLowerCase()}.png', alt='#{robotInfo.name}')
-					tr
-						th Robot Name
-						td #{robotInfo.name}
-		.col-md-8
+						td
+							table.table.table-dark
+								tbody
+									tr
+										th Robot Name
+										td #{robotInfo.name}
+
+		.col-md-7
 			table.table.table-dark
 				thead
 					tr

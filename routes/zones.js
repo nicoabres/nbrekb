@@ -129,4 +129,9 @@ router.get('/', function(req, res, next) {
   }
 })
 
+/* GET agents page. */
+router.get('/stats', function(req, res, next) {
+  res.render('zone_stats', {title: 'Zone Stats | nbreKB'});
+})
+
 module.exports = router;

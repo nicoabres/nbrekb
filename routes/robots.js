@@ -127,4 +127,9 @@ router.get('/', function(req, res, next) {
 	}
 })
 
+/* GET agents page. */
+router.get('/stats', function(req, res, next) {
+  res.render('robot_stats', {title: 'Robot Stats | nbreKB'});
+})
+
 module.exports = router;

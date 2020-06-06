@@ -19,3 +19,11 @@ h2 {
 p {
 	color:#f8f8ff;
 }
+
+.dropdown-menu {
+	background-color: #343a40;
+}
+
+.dropdown-menu a {
+	color: #f8f8ff;
+}

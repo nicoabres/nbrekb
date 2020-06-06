@@ -22,33 +22,56 @@ html(lang="en")
               li.nav-item
                 a.nav-link(href='/') Home
             if title == 'Agents | nbreKB'
-              li.nav-item.active
-                a.nav-link(href='/agents') Agents
+              li.nav-item.dropdown.active
+                a.nav-link.dropdown-toggle#agentDropdownMenuLink(href="#", data-toggle="dropdown", aria-haspopup="true", aria-expanded="false") Agents
+                .dropdown-menu(aria-labelledby="agentDropdownMenuLink")
+                  a.dropdown-item(href="/agents") List
+                  a.dropdown-item(href="/agents/stats") Stats
             else
-              li.nav-item
-                a.nav-link(href='/agents') Agents
+              li.nav-item.dropdown
+                a.nav-link.dropdown-toggle#agentDropdownMenuLink(href="#", data-toggle="dropdown", aria-haspopup="true", aria-expanded="false") Agents
+                .dropdown-menu(aria-labelledby="agentDropdownMenuLink")
+                  a.dropdown-item(href="/agents") List
+                  a.dropdown-item(href="/agents/stats") Stats
             if title == 'Corporations | nbreKB'
-              li.nav-item.active
-                a.nav-link(href='/corporations') Corporations
+              li.nav-item.dropdown.active
+                a.nav-link.dropdown-toggle#corporationDropdownMenuLink(href="#", data-toggle="dropdown", aria-haspopup="true", aria-expanded="false") Corporations
+                .dropdown-menu(aria-labelledby="corporationDropdownMenuLink")
+                  a.dropdown-item(href="/corporations") List
+                  a.dropdown-item(href="/corporations/stats") Stats
             else
-              li.nav-item
-                a.nav-link(href='/corporations') Corporations
+              li.nav-item.dropdown
+                a.nav-link.dropdown-toggle#corporationDropdownMenuLink(href="#", data-toggle="dropdown", aria-haspopup="true", aria-expanded="false") Corporations
+                .dropdown-menu(aria-labelledby="corporationDropdownMenuLink")
+                  a.dropdown-item(href="/corporations") List
+                  a.dropdown-item(href="/corporations/stats") Stats
             if title == 'Robots | nbreKB'
-              li.nav-item.active
-                a.nav-link(href='/robots') Robots
+              li.nav-item.dropdown.active
+                a.nav-link.dropdown-toggle#corporationDropdownMenuLink(href="#", data-toggle="dropdown", aria-haspopup="true", aria-expanded="false") Robots
+                .dropdown-menu(aria-labelledby="corporationDropdownMenuLink")
+                  a.dropdown-item(href="/robots") List
+                  a.dropdown-item(href="/robots/stats") Stats
             else
-              li.nav-item
-                a.nav-link(href='/robots') Robots
+              li.nav-item.dropdown
+                a.nav-link.dropdown-toggle#robotDropdownMenuLink(href="#", data-toggle="dropdown", aria-haspopup="true", aria-expanded="false") Robots
+                .dropdown-menu(aria-labelledby="robotDropdownMenuLink")
+                  a.dropdown-item(href="/robots") List
+                  a.dropdown-item(href="/robots/stats") Stats
             if title == 'Zones | nbreKB'
-              li.nav-item.active
-                a.nav-link(href='/zones') Zones
+              li.nav-item.dropdown.active
+                a.nav-link.dropdown-toggle#zoneDropdownMenuLink(href="#", data-toggle="dropdown", aria-haspopup="true", aria-expanded="false") Zones
+                .dropdown-menu(aria-labelledby="zoneDropdownMenuLink")
+                  a.dropdown-item(href="/zones") List
+                  a.dropdown-item(href="/zones/stats") Stats
             else
-              li.nav-item
-                a.nav-link(href='/zones') Zones
+              li.nav-item.dropdown
+                a.nav-link.dropdown-toggle#zoneDropdownMenuLink(href="#", data-toggle="dropdown", aria-haspopup="true", aria-expanded="false") Zones
+                .dropdown-menu(aria-labelledby="zoneDropdownMenuLink")
+                  a.dropdown-item(href="/zones") List
+                  a.dropdown-item(href="/zones/stats") Stats
     .container
-      .container-fluid
-        block content
-        script(src='https://code.jquery.com/jquery-3.5.1.slim.min.js', integrity='sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj', crossorigin='anonymous')
-        script(src='https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js', integrity='sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo', crossorigin='anonymous')
-        script(src='https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js', integrity='sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI', crossorigin='anonymous')
+      block content
+      script(src='https://code.jquery.com/jquery-3.5.1.slim.min.js', integrity='sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj', crossorigin='anonymous')
+      script(src='https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js', integrity='sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo', crossorigin='anonymous')
+      script(src='https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js', integrity='sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI', crossorigin='anonymous')
 

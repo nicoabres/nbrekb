@@ -155,4 +155,9 @@ router.get('/', function(req, res, next) {
   }
 });
 
+/* GET agents page. */
+router.get('/stats', function(req, res, next) {
+  res.render('agent_stats', {title: 'Agent Stats | nbreKB'});
+})
+
 module.exports = router;

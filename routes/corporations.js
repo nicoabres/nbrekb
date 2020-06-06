@@ -174,4 +174,9 @@ router.get('/', function(req, res, next) {
   }
 });
 
+/* GET agents page. */
+router.get('/stats', function(req, res, next) {
+  res.render('corporation_stats', {title: 'Corporation Stats | nbreKB'});
+})
+
 module.exports = router;
